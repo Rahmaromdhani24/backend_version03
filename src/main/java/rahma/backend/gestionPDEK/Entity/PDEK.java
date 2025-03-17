@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -45,6 +46,11 @@ public class PDEK {
 	    private TypesOperation typeOperation;
     
     @Enumerated(EnumType.STRING)
+	   @Column(name = "type_pistole")
+	    private TypePistolet typePistolet;
+  
+    
+    @Enumerated(EnumType.STRING)
     @Column(name = "plant")
     private Plant plant;  
 
@@ -55,6 +61,9 @@ public class PDEK {
     
     @OneToMany(mappedBy = "pdekTorsadage", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
     private List<Torsadage> pdekTorsadages  = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "pdekPistolet", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
+    private List<Pistolet> pdekPistoles  = new ArrayList<>();
     
     @ManyToMany  // association user remplissage de pdek  ==> nommer "creer"
     @JoinTable(
@@ -76,4 +85,9 @@ public class PDEK {
     
     @OneToMany(mappedBy = "pdek", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // relation avec PagePDEK 
     private List<PagePDEK> pages;
+
+    public List<Pistolet> getPdekPistoles() {
+        return pdekPistoles;
+    
+}
 }

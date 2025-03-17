@@ -1,7 +1,9 @@
 package rahma.backend.gestionPDEK.ServicesInterfaces;
 
 import rahma.backend.gestionPDEK.DTO.PdekDTO;
+import rahma.backend.gestionPDEK.DTO.PistoletDTO;
 import rahma.backend.gestionPDEK.Entity.Plant;
+import rahma.backend.gestionPDEK.Entity.TypePistolet;
 import rahma.backend.gestionPDEK.Entity.TypesOperation;
 
 public interface PDEKService {
@@ -17,6 +19,12 @@ public interface PDEKService {
 	public boolean verifierExistencePDEK_Torsadage(String sectionFil, int segment ,Plant plant , String nomProjet ) ; 
 	public PdekDTO recupererPdekTorsadag(String sectionFil, int segment ,Plant plant , String nomProjet) ; 
 	
+
+	                                	/****** torsadage *****/
+	public boolean verifierExistencePDEK_Pistolet(TypePistolet typePistolet ) ; 
+	public PistoletDTO recupererPdek_Pistolet(TypePistolet typePistolet) ; 
+	
+
 
   	/****** torsadage *****/
 /*public boolean verifierExistencePDEK(String sectionFil, int segment ,Plant plant , String nomProjet ) ; 

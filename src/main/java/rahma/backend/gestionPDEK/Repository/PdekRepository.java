@@ -35,5 +35,8 @@ public interface PdekRepository extends JpaRepository<PDEK , Long> {
 		    @Param("nomPlant") Plant nomPlant,
 		    @Param("projetName") String projetName
 		);
+	
+    Optional<PDEK> findByTypePistolet(TypePistolet typePistolet);
+
 
 }

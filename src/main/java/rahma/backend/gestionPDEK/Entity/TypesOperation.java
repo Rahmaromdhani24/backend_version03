@@ -4,7 +4,8 @@ package rahma.backend.gestionPDEK.Entity;
 	    Soudure("Opération de soudure a ultrason"),
 	    Torsadage("Opération de torsadage"),
 		Sertissage_Normal("Opération de Sertissage Normal"),
-		Sertissage_IDC("Opération de Sertissage IDC ");
+		Sertissage_IDC("Opération de Sertissage IDC "),
+		Montage_Pistolet("Opération de montage Pistolet");
 
 	    private final String description;
 
