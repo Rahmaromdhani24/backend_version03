@@ -14,7 +14,7 @@ import lombok.*;
 @Setter
 @Table(name = "Sertissage_IDC")
 public class SertissageIDC extends Operation {
-    public static final List<String> SECTIONS_FILS = List.of("0.35 mm" );
+    public static final List<String> SECTIONS_FILS = List.of("0.35 mm²" );
     public static final List<String> CODES_CONTROLES = List.of("A", "L","M", "R", "S", "w");
 
     public static final Map<String, String> CODES_CONTROLES_DESCRIPTION = Map.of(
@@ -22,50 +22,113 @@ public class SertissageIDC extends Operation {
         "L", "Fin de commande" ,
         "M", "Changement matière",
         "R", "Réparation ou réglage Outil/Machine",
-        "S", "Démarrage du cycle",
-        "W" ,"Démarrage apprentissage du systeme de surveillance"
+        "S", "Démarrage du cycle"
       
       
     );
 
-    @Column(name = "numero_outils")
-    private long numeroOutils;
+    @Column(name = "section_fil")
+    private String  sectionFil;
     
-    @Column(name = "numero_contacts")
-    private long numeroContacts;
-   
-    private double tolerance;
-    
-    @Column(name = "largeur_Sertisage")
-    private double largeurSertissage;
-    
-    @Column(name = "hauteur_Sertissage")
-    private double hauteurSertissage;
-    
-    @Column(name = "largeur_Isolant")
-    private double largeurIsolant;
-    
-    @Column(name = "hauteur_Isolant")
-    private double hauteurIsolant;
-    
+    @Column(name = "force_traction")
+    private String forceTraction;
 
-    private String  LGD;
+    @Column(name = "hauteur_Sertissage_max")
+    private double hauteurSertissageMax;
     
-    private String traction;
+    @Column(name = "hauteur_Sertissage_min")
+    private double hauteurSertissageMin;
     
-    @Column(name = "pos_gradant")
-    private String  posGradant;
+    private int segment ; 
+    
+    @Column(name = "date_creation")
+    private String date;
     
     
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate date;
+    @Column(name = "hauteur_Sertissage_c1_echantillon1")
+    private double hauteurSertissageC1Ech1;
+    
+    @Column(name = "hauteur_Sertissage_c1_echantillon2")
+    private double hauteurSertissageC1Ech2;
+    
+    @Column(name = "hauteur_Sertissage_c1_echantillon3")
+    private double hauteurSertissageC1Ech3;
+    
+    @Column(name = "hauteur_Sertissage_c1_echantillonFin")
+    private double hauteurSertissageC1EchFin;
 
+    @Column(name = "hauteur_Sertissage_c2_echantillon1")
+    private double hauteurSertissageC2Ech1;
+    
+    @Column(name = "hauteur_Sertissage_c2_echantillon2")
+    private double hauteurSertissageC2Ech2;
+    
+    @Column(name = "hauteur_Sertissage_c2_echantillon3")
+    private double hauteurSertissageC2Ech3;
+    
+    @Column(name = "hauteur_Sertissage_c2_echantillonFin")
+    private double hauteurSertissageC2EchFin;
+    
+    @Column(name = "numero_cycle")
+    private int numCycle ; 
+    
+    @Column(name = "code_controle")
+    private String codeControle ; 
+
+    private String produit ; 
+
+    @Column(name = "serie_produit")
+    private String serieProduit  ; 
+    
+    @Column(name = "quantite_cycle")
+    private int quantiteCycle ; 
+    
+    @Column(name = "numero_machine")
+    private int numeroMachine ; 
+    
+    @Column(name = "force_traction_c1_echantillon1")
+    private double forceTractionC1Ech1 ; 
+
+    @Column(name = "force_traction_c1_echantillon2")
+    private double forceTractionC1Ech2 ; 
+
+    @Column(name = "force_traction_c1_echantillon3")
+    private double forceTractionC1Ech3 ; 
+
+    @Column(name = "force_traction_c1_echFin")
+    private double forceTractionC1EchFin ; 
+
+    @Column(name = "force_traction_c2_echantillon1")
+    private double forceTractionC2Ech1 ; 
+    
+    @Column(name = "force_traction_c2_echantillon2")
+    private double forceTractionC2Ech2 ;
+
+    @Column(name = "force_traction_c2_echantillon3")
+    private double forceTractionC2Ech3;
+
+    @Column(name = "force_traction_c2_echFin")
+    private double forceTractionC2EchFin ; 
+
+    /**************** Relations *********************/
+    
+    @ManyToOne   // relation "saisir" sertissage idc  
+    @JoinColumn(name = "user_matricule")
+    private User userSertissageIDC;
+    
+    
+    @ManyToOne   // relation "associer"  PDEK a sertissage IDC 
+    @JoinColumn(name = "pdek_id")
+    private PDEK pdekSertissageIDC;
+    
+    @ManyToOne
+    @JoinColumn(name = "page_pdek_id") // La clé étrangère qui relie à PagePDEK
+    private PagePDEK pagePDEK; // **Doit correspondre à mappedBy dans PagePDEK**
+    
+    
     public static String getDescriptionForCode(String code) {
         return CODES_CONTROLES_DESCRIPTION.getOrDefault(code, "Description non trouvée");
     }
     
     
-    @Column(name = "quantite_atteint")
-    private int quantiteAtteint; 
-    private String code; 
 }

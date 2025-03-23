@@ -10,7 +10,7 @@ import rahma.backend.gestionPDEK.DTO.PdekDTO;
 import rahma.backend.gestionPDEK.DTO.TorsadageDTO;
 import rahma.backend.gestionPDEK.Entity.*;
 import rahma.backend.gestionPDEK.Repository.*;
-import rahma.backend.gestionPDEK.ServicesImplementation.ServicePDEKImplimenetation;
+import rahma.backend.gestionPDEK.ServicesImplementation.PDEK_ServiceImplimenetation;
 import rahma.backend.gestionPDEK.ServicesImplementation.TorsadageServiceImplimentation;
 
 @RestController
@@ -19,7 +19,7 @@ public class TorsadageController {
 
 	@Autowired  private TorsadageServiceImplimentation serviceTorsadage;
     @Autowired  private TorsadageRepository torsadageRepository ; 
-    @Autowired  private ServicePDEKImplimenetation servicePDEK ; 
+    @Autowired  private PDEK_ServiceImplimenetation servicePDEK ; 
     @Autowired  private PdekRepository repositoryPDEK ; 
 
 

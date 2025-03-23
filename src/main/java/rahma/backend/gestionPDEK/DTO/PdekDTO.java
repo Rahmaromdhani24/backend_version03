@@ -11,11 +11,11 @@ public class PdekDTO {
     private Long id;
     private String sectionFil;
     private String nomProjet;
-    private LocalDate dateCreation;
+    private String dateCreation;
     private long frequenceControle;
 
     // Constructeur avec tous les paramètres nécessaires
-    public PdekDTO(Long id, String sectionFil, String nomProjet , LocalDate dateCreation, long frequenceControle) {
+    public PdekDTO(Long id, String sectionFil, String nomProjet , String dateCreation, long frequenceControle) {
         this.id = id;
         this.sectionFil = sectionFil;
         this.nomProjet = nomProjet;

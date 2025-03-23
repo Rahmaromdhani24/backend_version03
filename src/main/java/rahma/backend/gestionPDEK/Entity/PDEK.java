@@ -37,9 +37,9 @@ public class PDEK {
     
     @Column(name = "numero_machine")
     private String numMachine; 
-
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate dateCreation;
+    
+    @Column(name = "date_creation")
+    private String dateCreation;
     
     @Enumerated(EnumType.STRING)
 	   @Column(name = "type_operation")
@@ -54,6 +54,18 @@ public class PDEK {
     @Column(name = "plant")
     private Plant plant;  
 
+    @Column(name = "numero_outils")
+    private long numeroOutils;
+    
+    @Column(name = "numero_contacts")
+    private long numeroContacts;
+   
+    private String  LGD;
+    
+    private double tolerance;
+    
+    @Column(name = "pos_gradant")
+    private String  posGradant;
     
     @OneToMany(mappedBy = "pdekSoudure", cascade = CascadeType.ALL) // relation "associer"  a operation soudure 
     private List<Soudure> pdekSoudures = new ArrayList<>();
@@ -64,6 +76,9 @@ public class PDEK {
     
     @OneToMany(mappedBy = "pdekPistolet", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
     private List<Pistolet> pdekPistoles  = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "pdekSertissageIDC", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
+    private List<SertissageIDC> pdekSertissageIDC  = new ArrayList<>();
     
     @ManyToMany  // association user remplissage de pdek  ==> nommer "creer"
     @JoinTable(

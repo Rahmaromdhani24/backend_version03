@@ -45,6 +45,9 @@ public class User {
 	  @OneToMany(mappedBy = "userTorsadage") // relation "saisir" entre user et torsadage  
 	    private List<Torsadage> torsadages;
 	  
-	  @OneToMany(mappedBy = "userPistolet") // relation "saisir" entre user et torsadage  
+	  @OneToMany(mappedBy = "userPistolet") // relation "saisir" entre user et pistolet  
 	    private List<Pistolet> pistoles;
+	  
+	  @OneToMany(mappedBy = "userSertissageIDC") // relation "saisir" entre user et sertissage idc   
+	    private List<SertissageIDC> sertissagesIDC;
 }

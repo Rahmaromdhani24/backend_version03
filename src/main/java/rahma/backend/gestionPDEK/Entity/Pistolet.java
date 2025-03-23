@@ -20,7 +20,7 @@ public class Pistolet extends Operation {
     private String specificationMesure;
     private int limiteInterventionMax;
     private int limiteInterventionMin;
-    private LocalDate dateCreation ; 
+    private String dateCreation ; 
     
     @Enumerated(EnumType.STRING)
     private TypePistolet type; 
@@ -32,6 +32,7 @@ public class Pistolet extends Operation {
     private int ech5;
     private double moyenne;
     private int etendu;
+    
 
     @ManyToOne   // relation "saisir" 
     @JoinColumn(name = "user_matricule")
@@ -44,8 +45,8 @@ public class Pistolet extends Operation {
 
     
     @ManyToOne
-    @JoinColumn(name = "page_pdek_id")
-    private PagePDEK pagePDEK;
+    @JoinColumn(name = "page_pdek_id") // relation avec PagePDEK 
+    private PagePDEK pagePDEK ;
 
    
 	public TypePistolet getTypePistolet() {

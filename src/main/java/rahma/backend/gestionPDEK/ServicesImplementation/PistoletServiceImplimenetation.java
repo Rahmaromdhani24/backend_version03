@@ -28,7 +28,7 @@ public class PistoletServiceImplimenetation {
                 .orElseGet(() -> {
                     PDEK newPdek = new PDEK();
                     newPdek.setTypePistolet(pistolet.getType());
-                    newPdek.setDateCreation(LocalDate.now());
+                  //  newPdek.setDateCreation(LocalDate.now());
                     newPdek.setTotalPages(1);
                     return pdekRepository.save(newPdek);
                 });

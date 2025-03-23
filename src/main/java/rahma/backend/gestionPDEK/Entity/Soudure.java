@@ -73,8 +73,7 @@ public class Soudure extends Operation {
     private double moyenne ;
     private int etendu;
    
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private String date;
     
     @Column(name = "quantite_atteint")
     private int quantiteAtteint; 
@@ -82,7 +81,7 @@ public class Soudure extends Operation {
     
     @ManyToOne   // Lien vers la page de PDEK 
     @JoinColumn(name = "page_pdek_id")
-    private PagePDEK pagePDEK_soudures;
+    private PagePDEK pagePDEK;
     
     @ManyToOne   // relation "associer"  PDEK a soudure 
     @JoinColumn(name = "pdek_id")

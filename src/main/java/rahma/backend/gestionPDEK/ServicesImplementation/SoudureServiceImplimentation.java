@@ -10,7 +10,7 @@ import rahma.backend.gestionPDEK.Repository.*;
 import rahma.backend.gestionPDEK.ServicesInterfaces.ServiceSoudure;
 
 @Service
-public class ServiceSoudureImplimentation implements ServiceSoudure {
+public class SoudureServiceImplimentation implements ServiceSoudure {
 
 	 @Autowired    private PdekRepository pdekRepository;
 	 @Autowired    private SoudureRepository soudureRepository;	
@@ -50,46 +50,45 @@ public class ServiceSoudureImplimentation implements ServiceSoudure {
   Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SoudureUtrason(sectionFilSelectionner , user.getSegment() , user.getPlant() , projet );
 
     if (pdekExiste.isPresent()) {
-        // Si le Pdek existe, tu peux le récupérer et effectuer tes opérations
+    	 // Si le Pdek existe, tu peux le récupérer et effectuer tes opérations
         PDEK pdek = pdekExiste.get();
-        instance1.setPdekSoudure(pdek);
-        instance1.setUserSoudure(user);
-        Integer dernierCycle = soudureRepository.findLastCycleByPdekSoudure_Id(pdek.getId());
-        int nouveauCycle = (dernierCycle != null) ? dernierCycle + 1 : 1;
-        instance1.setNumeroCycle(nouveauCycle);
-        soudureRepository.save(instance1) ;
+        
+        // ajout instance dans la table remplissage pdek 
         if (!pdek.getUsersRempliePDEK().contains(user)) {
             pdek.getUsersRempliePDEK().add(user);
-            //pdekRepository.save(pdek); // Sauvegarde de la mise à jour du PDEK
         }
+        // remplissage instance dans la table projet_pdek 
         if (!pdek.getProjets().contains(projetRepository.findByNom(projet).get())) {
             pdek.getProjets().add(projetRepository.findByNom(projet).get());
-            //pdekRepository.save(pdek); // Sauvegarde la mise à jour
         }
-        Optional<PagePDEK> dernierePagePDEK = pdekPageRepository.findTopByPdek_IdOrderByIdDesc(pdek.getId());
-        if (dernierePagePDEK.isPresent()) {
-            PagePDEK dernierePage = dernierePagePDEK.get();
+        
+        // 3. Trouver la dernière page du PDEK
+        PagePDEK pagePDEK = pdekPageRepository.findFirstByPdekOrderByPageNumberDesc(pdek).get() ; 
             
-            if (instance1.getNumeroCycle() < 25) {
-                instance1.setPagePDEK_soudures(dernierePage);
-            } else if (instance1.getNumeroCycle()  == 25) {
-                int nouveauPageNumber = dernierePage.getPageNumber() + 1;                
-                PagePDEK nouvellePage = new PagePDEK();
-                nouvellePage.setPdek(dernierePage.getPdek());
-                nouvellePage.setPageNumber(nouveauPageNumber);
-                nouvellePage.setStatus(false); 
-                
-                pdekPageRepository.save(nouvellePage);
+        // 4. Compter le nombre de pistolets sur la page actuelle
+        long nombreSouduresDansPage = soudureRepository.countByPagePDEK(pagePDEK);
+        int numeroCycle;
 
-                // Associer la soudure à la nouvelle page
-                instance1.setPagePDEK_soudures(nouvellePage);
-            }
-            // Sauvegarder la soudure avec la bonne page associée
-            soudureRepository.save(instance1);
+        if (nombreSouduresDansPage < 25) {
+            // Ajouter le pistolet à la même page
+            numeroCycle = (int) nombreSouduresDansPage + 1;
         }
-
-
-    } else {
+        else {
+            // Si la page est pleine, créer une nouvelle page
+            pagePDEK = new PagePDEK(pdek.getTotalPages() + 1, false, pdek);
+            pdekPageRepository.save(pagePDEK);
+            // Mettre à jour le total de pages du PDEK
+            pdek.setTotalPages(pdek.getTotalPages() + 1);
+            pdekRepository.save(pdek);
+            numeroCycle = 1; // Réinitialiser le cycle pour la nouvelle page
+        }
+        
+        instance1.setPdekSoudure(pdek);
+        instance1.setPagePDEK(pagePDEK);
+        instance1.setNumeroCycle(numeroCycle);
+        soudureRepository.save(instance1) ;
+        
+    }else {
        
     	PDEK newPDEK = new PDEK() ; 
     	newPDEK.setSectionFil(sectionFilSelectionner);
@@ -105,38 +104,19 @@ public class ServiceSoudureImplimentation implements ServiceSoudure {
     	newPDEK.setTotalPages(1);
     	instance1.setNumeroCycle(1);
     	pdekRepository.save(newPDEK)  ;
+		PagePDEK newPage = new PagePDEK(1, false, newPDEK);
+        pdekPageRepository.save(newPage);
+        instance1.setPagePDEK(newPage);
 	  if (!newPDEK.getProjets().contains(projetRepository.findByNom(projet).get())) {
 		  newPDEK.getProjets().add(projetRepository.findByNom(projet).get()); // Ajouter le projet au PDEK
 		  projetRepository.findByNom(projet).get().getPdeks().add(newPDEK);
     	projetRepository.save(projetRepository.findByNom(projet).get());
     	instance1.setPdekSoudure(newPDEK);
     	soudureRepository.save(instance1) ; 
-    	pdekPageRepository.save(new PagePDEK( 1 , false, newPDEK  )) ;
     	
 
     /***************/
-    	Optional<PagePDEK> dernierePagePDEK = pdekPageRepository.findTopByPdek_IdOrderByIdDesc(newPDEK.getId());
-        if (dernierePagePDEK.isPresent()) {
-            PagePDEK dernierePage = dernierePagePDEK.get();
-            
-            if (instance1.getNumeroCycle() < 25) {
-                instance1.setPagePDEK_soudures(dernierePage);
-            } else if (instance1.getNumeroCycle()  == 25) {
-                int nouveauPageNumber = dernierePage.getPageNumber() + 1;                
-                PagePDEK nouvellePage = new PagePDEK();
-                nouvellePage.setPdek(dernierePage.getPdek());
-                nouvellePage.setPageNumber(nouveauPageNumber);
-                nouvellePage.setStatus(false); 
-                
-                pdekPageRepository.save(nouvellePage);
-
-                // Associer la soudure à la nouvelle page
-                instance1.setPagePDEK_soudures(nouvellePage);
-            }
-            // Sauvegarder la soudure avec la bonne page associée
-            soudureRepository.save(instance1);
-
-}
+    	
 	  }
 	  
     }

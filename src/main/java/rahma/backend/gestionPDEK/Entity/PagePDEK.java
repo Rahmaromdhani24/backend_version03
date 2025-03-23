@@ -33,14 +33,18 @@ public class PagePDEK {
     @JoinColumn(name = "pdek_id")
     private PDEK pdek; 
 
-    @OneToMany(mappedBy = "pagePDEK_soudures", cascade = CascadeType.ALL, fetch = FetchType.LAZY)// Liste des soudures associées à cette page
+    @OneToMany(mappedBy = "pagePDEK", cascade = CascadeType.ALL, fetch = FetchType.LAZY)// Liste des soudures associées à cette page
     private List<Soudure> pagesSoudures; 
 
-    @OneToMany(mappedBy = "pagePDEK_torsadage", cascade = CascadeType.ALL, fetch = FetchType.LAZY)// Liste des torsadages  associées à cette page
+    @OneToMany(mappedBy = "pagePDEK", cascade = CascadeType.ALL, fetch = FetchType.LAZY)// Liste des torsadages  associées à cette page
     private List<Torsadage> pageTorsadages; 
     
     @OneToMany(mappedBy = "pagePDEK", cascade = CascadeType.ALL, fetch = FetchType.LAZY)// Liste des torsadages  associées à cette page
-    private List<Pistolet> pagePistoles; 
+    private List<Pistolet> pagePistoles;     
+    
+    @OneToMany(mappedBy = "pagePDEK", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SertissageIDC> pageSertissageIDC;
+
     
     public PagePDEK(int pageNumber, boolean status, PDEK pdek) {
  		super();

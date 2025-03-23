@@ -15,7 +15,7 @@ import rahma.backend.gestionPDEK.Repository.ProjetRepository;
 import rahma.backend.gestionPDEK.ServicesInterfaces.PDEKService;
 
 @Service
-public class ServicePDEKImplimenetation implements PDEKService {
+public class PDEK_ServiceImplimenetation implements PDEKService {
 
 	
 	@Autowired PdekRepository pdekRepository ;

@@ -13,7 +13,6 @@ import java.time.LocalDate;
 public class Torsadage extends Operation {
 
     public static final List<String> SPECIFICATIONS_MESURES = List.of("10 mm²" , "11 mm²" , "12 mm²" , "13 mm²" , "15 mm²" , "18 mm²", "20 mm²" , "24 mm²" ,"25 mm²" , "30 mm²" , "40 mm²" ,"45 mm²" );
-    //public static final List<String> SECTIONS_FILS  = List.of("0.13 mm²" , "0.35 mm²" , "0.5 mm²" , "0.75 mm²" , "1 mm²" , "1.5 mm²", "2 mm²" , "2.5 mm²" );
     public static final List<String> CODES_CONTROLES = List.of("A", "D", "R");
     public static final Map<String, String> CODES_CONTROLES_DESCRIPTION = Map.of(
         "A", "Rupture à cause défaut de matériel ou perturbation de moyen de travail /Arrét ",      
@@ -80,9 +79,7 @@ public class Torsadage extends Operation {
     @Column(name = "echantillon_5")
     private String ech5 ; 
 
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private String date;
 
     @Column(name = "quantite_totale")
     private int quantiteTotale ; 
@@ -107,7 +104,7 @@ public class Torsadage extends Operation {
     
     @ManyToOne   // Lien vers la page de PDEK 
     @JoinColumn(name = "page_pdek_id")
-    private PagePDEK pagePDEK_torsadage;
+    private PagePDEK pagePDEK;
     
     
     public static String getDescriptionForCode(String code) {

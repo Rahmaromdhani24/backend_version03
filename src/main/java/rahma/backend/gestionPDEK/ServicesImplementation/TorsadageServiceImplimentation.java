@@ -61,46 +61,45 @@ public class TorsadageServiceImplimentation implements ServiceTorsadage {
     if (pdekExiste.isPresent()) {
         // Si le Pdek existe, tu peux le récupérer et effectuer tes opérations
         PDEK pdek = pdekExiste.get();
-        instance1.setPdekTorsadage(pdek);
-        instance1.setUserTorsadage(user);
-        Integer dernierCycle = torsadageRepository.findLastCycleByPdekTorsadage_Id(pdek.getId());
-        if(dernierCycle == 25) {
-        	  instance1.setNumeroCycle(1);
-        }
-        else if(dernierCycle < 25) {
-        	  int nouveauCycle = (dernierCycle != null) ? dernierCycle + 1 : 1;
-              instance1.setNumeroCycle(nouveauCycle);
-              }
-        torsadageRepository.save(instance1) ;
+        
+        // ajout instance dans la table remplissage pdek 
         if (!pdek.getUsersRempliePDEK().contains(user)) {
             pdek.getUsersRempliePDEK().add(user);
-            //pdekRepository.save(pdek); // Sauvegarde de la mise à jour du PDEK
         }
+        // remplissage instance dans la table projet_pdek 
         if (!pdek.getProjets().contains(projetRepository.findByNom(projet).get())) {
             pdek.getProjets().add(projetRepository.findByNom(projet).get());
-            //pdekRepository.save(pdek); // Sauvegarde la mise à jour
         }
-        Optional<PagePDEK> dernierePagePDEK = pdekPageRepository.findTopByPdek_IdOrderByIdDesc(pdek.getId());
-        if (dernierePagePDEK.isPresent()) {
-            PagePDEK dernierePage = dernierePagePDEK.get();
+        
+        // 3. Trouver la dernière page du PDEK
+        PagePDEK pagePDEK = pdekPageRepository.findFirstByPdekOrderByPageNumberDesc(pdek).get() ; 
             
-            if (instance1.getNumeroCycle() < 25) {
-                instance1.setPagePDEK_torsadage(dernierePage);
-            } else if (instance1.getNumeroCycle() >25) {
-                int nouveauPageNumber = dernierePage.getPageNumber() + 1;                
-                PagePDEK nouvellePage = new PagePDEK();
-                nouvellePage.setPdek(dernierePage.getPdek());
-                nouvellePage.setPageNumber(nouveauPageNumber);
-                nouvellePage.setStatus(false); 
-                
-                pdekPageRepository.save(nouvellePage);
+        // 4. Compter le nombre de pistolets sur la page actuelle
+        long nombreTorsadagesDansPage = torsadageRepository.countByPagePDEK(pagePDEK);
+        int numeroCycle;
 
-                // Associer la soudure à la nouvelle page
-                instance1.setPagePDEK_torsadage(nouvellePage);
-            }
-            // Sauvegarder la soudure avec la bonne page associée
-            torsadageRepository.save(instance1);
+        if (nombreTorsadagesDansPage < 25) {
+            // Ajouter le pistolet à la même page
+            numeroCycle = (int) nombreTorsadagesDansPage + 1;
         }
+        else {
+            // Si la page est pleine, créer une nouvelle page
+            pagePDEK = new PagePDEK(pdek.getTotalPages() + 1, false, pdek);
+            pdekPageRepository.save(pagePDEK);
+            // Mettre à jour le total de pages du PDEK
+            pdek.setTotalPages(pdek.getTotalPages() + 1);
+            pdekRepository.save(pdek);
+            numeroCycle = 1; // Réinitialiser le cycle pour la nouvelle page
+        }
+
+        
+         instance1.setPdekTorsadage(pdek);
+         instance1.setPagePDEK(pagePDEK);
+         instance1.setNumeroCycle(numeroCycle);
+        torsadageRepository.save(instance1) ;
+        
+   
+      
 
 
     } else {
@@ -110,50 +109,26 @@ public class TorsadageServiceImplimentation implements ServiceTorsadage {
     	newPDEK.setNombreEchantillons("3 Piéces ");
     	newPDEK.setSegment(user.getSegment());
     	newPDEK.setNumMachine(user.getMachine());
-    	newPDEK.setDateCreation(instanceTorsadage.getDate());
+    //	newPDEK.setDateCreation(instanceTorsadage.getDate());
     	newPDEK.setTypeOperation(TypesOperation.Torsadage);
     	newPDEK.setPlant(user.getPlant());
     	newPDEK.setUsersRempliePDEK(List.of(user));
     	newPDEK.setTotalPages(1);
     	instance1.setNumeroCycle(1);
     	pdekRepository.save(newPDEK)  ;
+    	PagePDEK newPage = new PagePDEK(1, false, newPDEK);
+        pdekPageRepository.save(newPage);
+        instance1.setPagePDEK(newPage);
 	  if (!newPDEK.getProjets().contains(projetRepository.findByNom(projet).get())) {
 		  newPDEK.getProjets().add(projetRepository.findByNom(projet).get()); // Ajouter le projet au PDEK
 		  projetRepository.findByNom(projet).get().getPdeks().add(newPDEK);
     	projetRepository.save(projetRepository.findByNom(projet).get());
     	instance1.setPdekTorsadage(newPDEK);
-    	torsadageRepository.save(instance1) ; 
-    	pdekPageRepository.save(new PagePDEK( 1 , false, newPDEK  )) ;
-    	
+    	torsadageRepository.save(instance1) ;   	
 
-    /***************/
-    	Optional<PagePDEK> dernierePagePDEK = pdekPageRepository.findTopByPdek_IdOrderByIdDesc(newPDEK.getId());
-        if (dernierePagePDEK.isPresent()) {
-            PagePDEK dernierePage = dernierePagePDEK.get();
-            
-            if (instance1.getNumeroCycle() < 25) {
-                instance1.setPagePDEK_torsadage(dernierePage);
-            } else if (instance1.getNumeroCycle()  == 25) {
-                int nouveauPageNumber = dernierePage.getPageNumber() + 1;                
-                PagePDEK nouvellePage = new PagePDEK();
-                nouvellePage.setPdek(dernierePage.getPdek());
-                nouvellePage.setPageNumber(nouveauPageNumber);
-                nouvellePage.setStatus(false); 
-                
-                pdekPageRepository.save(nouvellePage);
-
-                // Associer la soudure à la nouvelle page
-                instance1.setPagePDEK_torsadage(nouvellePage);
-            }
-            // Sauvegarder la soudure avec la bonne page associée
-            torsadageRepository.save(instance1);
-
-}
-	  }
-	  
+	      }
     }
-    }
-	 
+	 }
 
 	 @Override
 	 public List<TorsadageDTO> recupererTorsadagesParPDEK(String specificationMesurer, int segment ,Plant plant ,   String nomProjet) {

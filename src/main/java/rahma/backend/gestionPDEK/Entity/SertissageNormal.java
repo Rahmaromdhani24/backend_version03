@@ -47,44 +47,74 @@ public class SertissageNormal extends Operation {
       
     );
 
+
     @Column(name = "numero_outils")
     private long numeroOutils;
     
     @Column(name = "numero_contacts")
     private long numeroContacts;
-   
-    private double tolerance;
+
+
+    @Column(name = "hauteur_Sertisage_ech1")
+    private double hauteurSertissageEch1;
     
-    @Column(name = "largeur_Sertisage")
+    @Column(name = "hauteur_Sertisage_ech2")
+    private double hauteurSertissageEch2;
+
+    @Column(name = "hauteur_Sertisage_ech3")
+    private double hauteurSertissageEch3;
+
+    @Column(name = "hauteur_Sertisage_echFin")
+    private double hauteurSertissageEchFin;
+
+    @Column(name = "largeur_Sertissage")
     private double largeurSertissage;
-    
-    @Column(name = "hauteur_Sertissage")
-    private double hauteurSertissage;
-    
-    @Column(name = "largeur_Isolant")
-    private double largeurIsolant;
+
+    @Column(name = "largeur_Sertissage_EchFin")
+    private double largeurSertissageEchFin;
     
     @Column(name = "hauteur_Isolant")
     private double hauteurIsolant;
+
+    @Column(name = "hauteur_Isolant_EchFin")
+    private double hauteurIsolantEchFin;
+
+    @Column(name = "largeur_Isolant")
+    private double largeurIsolant;
+    
+    @Column(name = "largeur_Isolant_EchFin")
+    private double largeurIsolantEchFin;
+
+    private String traction;
+
+    @Column(name = "traction_FinEch")
+    private double tractionFinEch;
+
+    private String produit ; 
+
+    @Column(name = "serie_produit")
+    private int serieProduit; 
+
+    @Column(name = "quantite_atteint")
+    private int quantiteAtteint; 
+    private String codeControle; 
+
+
+  
     
 
-    private String  LGD;
+   
+
     
-    private String traction;
-    
-    @Column(name = "pos_gradant")
-    private String  posGradant;
+   
     
     
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate date;
+    private String date;
 
     public static String getDescriptionForCode(String code) {
         return CODES_CONTROLES_DESCRIPTION.getOrDefault(code, "Description non trouvée");
     }
     
     
-    @Column(name = "quantite_atteint")
-    private int quantiteAtteint; 
-    private String code; 
+  
 }

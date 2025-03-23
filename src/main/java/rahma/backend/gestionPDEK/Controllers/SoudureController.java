@@ -17,9 +17,9 @@ import rahma.backend.gestionPDEK.ServicesImplementation.*;
 @RestController
 @RequestMapping("/operations/soudure")
 public class SoudureController {
-    @Autowired  private ServiceSoudureImplimentation serviceSoudure;
+    @Autowired  private SoudureServiceImplimentation serviceSoudure;
     @Autowired  private SoudureRepository soudureRepository ; 
-    @Autowired  private ServicePDEKImplimenetation servicePDEK ; 
+    @Autowired  private PDEK_ServiceImplimenetation servicePDEK ; 
     @Autowired  private PdekRepository repositoryPDEK ; 
     
     @GetMapping("/sectionsFils")

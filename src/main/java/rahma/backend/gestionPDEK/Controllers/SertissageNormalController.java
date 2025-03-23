@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import rahma.backend.gestionPDEK.DTO.PdekDTO;
 import rahma.backend.gestionPDEK.Entity.*;
 import rahma.backend.gestionPDEK.Repository.*;
-import rahma.backend.gestionPDEK.ServicesImplementation.ServicePDEKImplimenetation;
+import rahma.backend.gestionPDEK.ServicesImplementation.PDEK_ServiceImplimenetation;
 
 @RestController
 @RequestMapping("/operations/SertissageNormal")
 public class SertissageNormalController {
 	   @Autowired private SertissageNormalRepository sertissageNormalRepository ; 
-       @Autowired private ServicePDEKImplimenetation servicePDEK ; 
+       @Autowired private PDEK_ServiceImplimenetation servicePDEK ; 
 
 
        @GetMapping("/sectionsFils")

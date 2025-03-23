@@ -15,7 +15,7 @@ import rahma.backend.gestionPDEK.Entity.TypesOperation;
 public class PistoletDTO {
 
 		private Long id;
-	    private LocalDate date;
+	    private String date;
 	    private TypePistolet typePistolet ; 
 	    private int  numeroPistolet ; 
 	    private String specificationMesure; 
@@ -23,7 +23,7 @@ public class PistoletDTO {
 	    private int limiteInterventionMin ; 
 	    private PDEK pdek ;
 	    
-		public PistoletDTO(Long id, LocalDate date, TypePistolet typePistolet, int numeroPistolet,
+		public PistoletDTO(Long id, String date, TypePistolet typePistolet, int numeroPistolet,
 				String specificationMesure, int limiteInterventionMax, int limiteInterventionMin, PDEK pdek) {
 			super();
 			this.id = id;
