@@ -1,6 +1,9 @@
 package rahma.backend.gestionPDEK.ServicesImplementation;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
@@ -63,12 +66,16 @@ public class PistoletServiceImplimenetation {
         // 5. Associer le Pistolet au PDEK et à l'utilisateur
         pistolet.setPdekPistolet(pdek);
         pistolet.setPagePDEK(pagePDEK);
-        pistolet.setNumerocycle(numeroCycle);
+        pistolet.setNumeroCycle(numeroCycle);
         pistolet.setUserPistolet(user); 
 
         Pistolet savedPistolet = pistoletRepository.save(pistolet);
 
         // 6. Associer l'utilisateur au PDEK pour le remplissage (ManyToMany)
+        if (pdek.getUsersRempliePDEK() == null) {
+            pdek.setUsersRempliePDEK(new ArrayList<>());
+        }
+
         if (!pdek.getUsersRempliePDEK().contains(user)) {
             pdek.getUsersRempliePDEK().add(user);
             pdekRepository.save(pdek);
@@ -76,4 +83,28 @@ public class PistoletServiceImplimenetation {
 
         return savedPistolet;
     }
+    
+	 ///////
+	 public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
+	        // 1️⃣ Récupérer le PDEK correspondant
+	        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionne, segment, nomPlant, projetName);
+
+	        if (pdekOpt.isEmpty()) {
+	            return Optional.empty(); // Aucun PDEK trouvé
+	        }
+
+	        PDEK pdek = pdekOpt.get();
+
+	        // 2️⃣ Récupérer la dernière page PDEK
+	        Optional<PagePDEK> lastPageOpt = pagePDEKRepository.findLastPageByPdek(pdek.getId());
+
+	        if (lastPageOpt.isEmpty()) {
+	            return Optional.empty(); // Aucune page trouvée
+	        }
+
+	        PagePDEK lastPage = lastPageOpt.get();
+
+	        //  Récupérer le dernier numéro de cycle de sertissage normal
+	        return pistoletRepository.findLastNumCycleByPage(lastPage.getId());
+	    }
 }

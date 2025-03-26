@@ -1,6 +1,7 @@
 package rahma.backend.gestionPDEK.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +22,9 @@ public interface SoudureRepository extends JpaRepository<Soudure, Long> {
 	 
 	   // Compter le nombre de SertissageIDC associés à une page donnée
 	    long countByPagePDEK(PagePDEK pagePDEK);
+	    
+	    @Query("SELECT s.numeroCycle FROM Soudure s WHERE s.pagePDEK.id = :pageId ORDER BY s.numeroCycle DESC LIMIT 1")
+	     Optional<Integer> findLastNumeroCycleByPage(@Param("pageId") Long pageId);
+
 }
 

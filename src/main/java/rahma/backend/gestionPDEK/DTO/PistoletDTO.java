@@ -18,19 +18,17 @@ public class PistoletDTO {
 	    private String date;
 	    private TypePistolet typePistolet ; 
 	    private int  numeroPistolet ; 
-	    private String specificationMesure; 
-	    private int limiteInterventionMax ; 
-	    private int limiteInterventionMin ; 
+	    private String limiteInterventionMax ; 
+	    private String limiteInterventionMin ; 
 	    private PDEK pdek ;
 	    
 		public PistoletDTO(Long id, String date, TypePistolet typePistolet, int numeroPistolet,
-				String specificationMesure, int limiteInterventionMax, int limiteInterventionMin, PDEK pdek) {
+				 String limiteInterventionMax, String limiteInterventionMin, PDEK pdek) {
 			super();
 			this.id = id;
 			this.date = date;
 			this.typePistolet = typePistolet;
 			this.numeroPistolet = numeroPistolet;
-			this.specificationMesure = specificationMesure;
 			this.limiteInterventionMax = limiteInterventionMax;
 			this.limiteInterventionMin = limiteInterventionMin;
 			this.pdek = pdek;

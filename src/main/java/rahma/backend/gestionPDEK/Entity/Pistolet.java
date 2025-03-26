@@ -12,19 +12,24 @@ import lombok.*;
 @Entity
 public class Pistolet extends Operation {
     
-	private int numerocycle ; 
+    @Column(name = "numero_cycle")
+    private int  numeroCycle;
 	private int numeroPistolet;
     private String nbrCollierTester;
+    private String specificationMesure ; 
+    private String coupePropre;
     private int axeSerrage;
     private int semaine;
-    private String specificationMesure;
-    private int limiteInterventionMax;
-    private int limiteInterventionMin;
+    private String limiteInterventionMax;
+    private String limiteInterventionMin;
     private String dateCreation ; 
     
     @Enumerated(EnumType.STRING)
     private TypePistolet type; 
 
+    @Enumerated(EnumType.STRING)
+    private CategoriePistolet categorie; 
+    
     private int ech1;
     private int ech2;
     private int ech3;

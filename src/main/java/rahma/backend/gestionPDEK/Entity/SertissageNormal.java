@@ -1,11 +1,7 @@
 package rahma.backend.gestionPDEK.Entity;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,26 +10,7 @@ import lombok.*;
 @Setter
 @Table(name = "Sertissage_Normal")
 public class SertissageNormal extends Operation {
-    public static final Map<String, String[]> SECTIONS_FILS_SERTISSAGE = Map.ofEntries(
-        Map.entry("0.22 mm²", new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("0.25 mm²", new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("0.35 mm²", new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("0.5 mm²", new String[] {  "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("0.75 mm²", new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("1 mm²",    new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("1.5 mm²",  new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("2 mm²",    new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("2.5 mm²",  new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("4 mm²",    new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("5 mm²",    new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("6 mm²",    new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("7 mm²",    new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" }),
-        Map.entry("10 mm²",   new String[] { "Hauteur_Sertissage: 1.10/±0.05", "Largeur_Sertissage: 1.65/±0.1", "Hauteur_Isolant: 3.10/±0.05", "Largeur_Isolant: 3.6/±0.1", "Traction: 60" })
-    );
-
-    public static String[] getSertissageValues(String sectionFil) {
-        return SECTIONS_FILS_SERTISSAGE.getOrDefault(sectionFil, new String[] { "Données non disponibles" });
-    }
+  
     public static final List<String> CODES_CONTROLES = List.of("A", "L","M", "R", "S", "w");
 
     public static final Map<String, String> CODES_CONTROLES_DESCRIPTION = Map.of(
@@ -47,12 +24,17 @@ public class SertissageNormal extends Operation {
       
     );
 
-
+    @Column(name = "numero_cycle")
+    private int numCycle ; 
+    
     @Column(name = "numero_outils")
-    private long numeroOutils;
+    private String numeroOutils;
     
     @Column(name = "numero_contacts")
-    private long numeroContacts;
+    private String numeroContacts;
+
+    @Column(name = "section_fil")
+    private String sectionFil;
 
 
     @Column(name = "hauteur_Sertisage_ech1")
@@ -95,25 +77,36 @@ public class SertissageNormal extends Operation {
     @Column(name = "serie_produit")
     private int serieProduit; 
 
-    @Column(name = "quantite_atteint")
-    private int quantiteAtteint; 
+    @Column(name = "quantite_cycle")
+    private int quantiteCycle; 
+    
     private String codeControle; 
-
-
-  
-    
-
-   
-
-    
-   
-    
     
     private String date;
+    
+    private int  segment ; 
 
+    private double tolerance ; 
+
+    @Column(name = "numero_machine")
+    private String numeroMachine ; 
+    
     public static String getDescriptionForCode(String code) {
         return CODES_CONTROLES_DESCRIPTION.getOrDefault(code, "Description non trouvée");
     }
+    
+    /*********************************************************************************/
+    @ManyToOne   // relation "saisir" sertissage idc  
+    @JoinColumn(name = "user_matricule")
+    private User userSertissageNormal;
+    
+    @ManyToOne   // relation "associer"  PDEK a sertissage Normal 
+    @JoinColumn(name = "pdek_id")
+    private PDEK pdekSertissageNormal;
+    
+    @ManyToOne
+    @JoinColumn(name = "page_pdek_id") // La clé étrangère qui relie à PagePDEK
+    private PagePDEK pagePDEK; // **Doit correspondre à mappedBy dans PagePDEK**
     
     
   

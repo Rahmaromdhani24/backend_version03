@@ -152,5 +152,27 @@ public class SertissageIDC_ServiceImplimenetation {
 	         return List.of();
 	     }
 	 }
+	 ///////
+	 public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
+	        // 1️⃣ Récupérer le PDEK correspondant
+	        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionne, segment, nomPlant, projetName);
 
+	        if (pdekOpt.isEmpty()) {
+	            return Optional.empty(); // Aucun PDEK trouvé
+	        }
+
+	        PDEK pdek = pdekOpt.get();
+
+	        // 2️⃣ Récupérer la dernière page PDEK
+	        Optional<PagePDEK> lastPageOpt = pdekPageRepository.findLastPageByPdek(pdek.getId());
+
+	        if (lastPageOpt.isEmpty()) {
+	            return Optional.empty(); // Aucune page trouvée
+	        }
+
+	        PagePDEK lastPage = lastPageOpt.get();
+
+	        //  Récupérer le dernier numéro de cycle de sertissage normal
+	        return sertissageIDCRepository.findLastNumCycleByPage(lastPage.getId());
+	    }
 }

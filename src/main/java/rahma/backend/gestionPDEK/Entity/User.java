@@ -50,4 +50,7 @@ public class User {
 	  
 	  @OneToMany(mappedBy = "userSertissageIDC") // relation "saisir" entre user et sertissage idc   
 	    private List<SertissageIDC> sertissagesIDC;
+	  
+	  @OneToMany(mappedBy = "userSertissageNormal") // relation "saisir" entre user et sertissage idc   
+	    private List<SertissageNormal> sertissagesNormal;
 }

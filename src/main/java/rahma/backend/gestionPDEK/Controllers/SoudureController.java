@@ -1,8 +1,6 @@
 package rahma.backend.gestionPDEK.Controllers;
 
 import java.util.*;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -184,6 +182,19 @@ public ResponseEntity<String> getTractionBySections(@PathVariable String section
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erreur lors de l'ajout : " + e.getMessage());
         }
+    }
+    @GetMapping("/dernier-numero-cycle")
+    public ResponseEntity<?> getLastNumeroCycle(
+            @RequestParam String sectionFilSelectionne,
+            @RequestParam int segment,
+            @RequestParam Plant nomPlant,
+            @RequestParam String projetName) {
+
+        Optional<Integer> dernierNumeroCycle = serviceSoudure.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
+
+        return dernierNumeroCycle
+                .map(ResponseEntity::ok) // Si le dernier numéro de cycle est présent, renvoyer 200 OK avec la valeur
+                .orElseGet(() -> ResponseEntity.noContent().build()); // Sinon, renvoyer 204 No Content
     }
 
 }

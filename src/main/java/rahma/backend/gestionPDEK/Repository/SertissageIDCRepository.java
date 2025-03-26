@@ -1,6 +1,8 @@
 package rahma.backend.gestionPDEK.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import rahma.backend.gestionPDEK.Entity.PagePDEK;
 import rahma.backend.gestionPDEK.Entity.SertissageIDC;
@@ -20,6 +22,8 @@ public interface SertissageIDCRepository extends JpaRepository<SertissageIDC, Lo
      List<SertissageIDC> findByPdekSertissageIDC_Id(Long pdekId) ;
 		// TODO Auto-generated method stub
 
+     @Query("SELECT s.numCycle FROM SertissageIDC s WHERE s.pagePDEK.id = :pageId ORDER BY s.numCycle DESC LIMIT 1")
+     Optional<Integer> findLastNumCycleByPage(@Param("pageId") Long pageId);
 
 }
 

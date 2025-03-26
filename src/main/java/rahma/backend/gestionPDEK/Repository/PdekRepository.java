@@ -49,6 +49,18 @@ public interface PdekRepository extends JpaRepository<PDEK , Long> {
 		);
 
 	
+	@Query("SELECT p FROM PDEK p WHERE p.sectionFil = :sectionFilSelectionne " +
+		       "AND p.typeOperation = 'Sertissage_Normal' " +
+		       "AND p.segment = :segment " +
+		       "AND p.plant = :nomPlant " +
+		       "AND EXISTS (SELECT pr FROM Projet pr JOIN pr.pdeks pp WHERE pr.nom = :projetName AND pp.id = p.id)")
+		Optional<PDEK> findUniquePDEK_SertissageNormal(
+		    @Param("sectionFilSelectionne") String sectionFilSelectionne, 
+		    @Param("segment") int segment, 
+		    @Param("nomPlant") Plant nomPlant,
+		    @Param("projetName") String projetName
+		);
+
     Optional<PDEK> findByTypePistolet(TypePistolet typePistolet);
 
 

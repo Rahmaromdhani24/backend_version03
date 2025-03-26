@@ -1,34 +1,28 @@
 package rahma.backend.gestionPDEK.Controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rahma.backend.gestionPDEK.DTO.PdekDTO;
 import rahma.backend.gestionPDEK.Entity.*;
 import rahma.backend.gestionPDEK.Repository.*;
 import rahma.backend.gestionPDEK.ServicesImplementation.PDEK_ServiceImplimenetation;
+import rahma.backend.gestionPDEK.ServicesImplementation.SertissageNormalServiceImplimentation;
 
 @RestController
 @RequestMapping("/operations/SertissageNormal")
 public class SertissageNormalController {
 	   @Autowired private SertissageNormalRepository sertissageNormalRepository ; 
        @Autowired private PDEK_ServiceImplimenetation servicePDEK ; 
+       @Autowired  private  SertissageNormalServiceImplimentation serviceSertissageNormal;
 
-
-       @GetMapping("/sectionsFils")
-       public List<String> getSectionsFils() {
-           return SertissageNormal.SECTIONS_FILS_SERTISSAGE.keySet().stream()
-                   .sorted((s1, s2) -> {
-                       // Extraire les valeurs numériques et comparer
-                       double v1 = Double.parseDouble(s1.split(" ")[0]);
-                       double v2 = Double.parseDouble(s2.split(" ")[0]);
-                       return Double.compare(v1, v2);
-                   })
-                   .collect(Collectors.toList());
-       }
+      
 
     @GetMapping("/codesControles")
     public List<String> getCodesControles() {
@@ -39,36 +33,189 @@ public class SertissageNormalController {
     public String getDescriptionForCode(@PathVariable String code) {
         return SertissageNormal.getDescriptionForCode(code);
     }
-  //sections/0.35 mm²/Hauteur_Sertissage
-  @GetMapping("/sections/{section}/{element}")
-  public String getElementValue(@PathVariable String section, @PathVariable String element) {
-      // Vérifier si la section existe
-      String[] values = SertissageNormal.SECTIONS_FILS_SERTISSAGE.get(section);
-      if (values == null) {
-          return "Section non trouvée";
+ 
+
+   
+
+/********************** Nouvelle partie *********************/
+@PostMapping("/ajouterPdekSertissageNormal")
+public ResponseEntity<String> ajouterSertissageNormal(
+         @RequestParam int matricule,
+         @RequestParam String nomProjet,
+         @RequestBody SertissageNormal sertissageNormal) {
+    try {
+        serviceSertissageNormal.ajoutPDEK_SertissageNormal( sertissageNormal , matricule, nomProjet);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Sertissage IDC ajouté avec succès");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+    }
+}
+
+  @GetMapping("/contacts")
+  public List<String> getDistinctContacts(@RequestParam String numeroOutil) {
+      return serviceSertissageNormal.getDistinctContactsByNumeroOutil(numeroOutil);
+  }
+      @GetMapping("/sections")
+      public ResponseEntity<List<String>> getSectionsFil(@RequestParam String numeroOutil, @RequestParam String numeroContact) {
+    	    List<String> sectionsFil = serviceSertissageNormal.getSectionsByOutilAndContact(numeroOutil, numeroContact);
+    	    if (sectionsFil.isEmpty()) {
+    	        return ResponseEntity.notFound().build();
+    	    }
+    	    return ResponseEntity.ok(sectionsFil);
+    	}
+      
+      @GetMapping("/hauteurSertissage")
+      public ResponseEntity<String> getHauteurSertissage(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String hauteurSertissage = serviceSertissageNormal.getHauteurSertissage(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
+      }
+      
+      
+      @GetMapping("/largeurSertissage")
+      public ResponseEntity<String> getLargeurSertissage(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String hauteurSertissage = serviceSertissageNormal.getLargeurSertissage(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
+      }
+      @GetMapping("/ToleranceLargeurSertissage")
+      public ResponseEntity<String> getToleranceLargeurSertissage(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String hauteurSertissage = serviceSertissageNormal.getToleranceLargeurSertissage(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
+      }
+      @GetMapping("/hauteurIsolant")
+      public ResponseEntity<String> getHauteurIsolant(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String hauteurSertissage = serviceSertissageNormal.getHauteurIsolant(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
+      }
+      @GetMapping("/ToleranceHauteurIsolant")
+      public ResponseEntity<String> getToleranceHauteurIsolant(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String hauteurSertissage = serviceSertissageNormal.getToleranceHauteurIsolant(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
+      }
+      @GetMapping("/largeurIsolant")
+      public ResponseEntity<String> getLargeurIsolant(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String hauteurSertissage = serviceSertissageNormal.getLargeurIsolant(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
+      }
+      @GetMapping("/ToleranceLargeurIsolant")
+      public ResponseEntity<String> getToleranceLargeurIsolant(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String hauteurSertissage = serviceSertissageNormal.getToleranceLargeurIsolant(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
+      }
+      @GetMapping("/traction")
+      public ResponseEntity<String> getTractionValeur(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la valeur de traction
+              String traction = serviceSertissageNormal.getTractionValeur(numeroOutil, numeroContact, sectionFil);
+      
+              return ResponseEntity.ok()
+                      .contentType(MediaType.TEXT_PLAIN) // Empêche l'encodage HTML
+                      .body(traction);
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                      .contentType(MediaType.TEXT_PLAIN)
+                      .body(e.getMessage());
+          }
+      }
+      @GetMapping("/tolerance")
+      public ResponseEntity<String> getToleranceValue(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la valeur de traction
+              String traction = serviceSertissageNormal.getToleranceValue(numeroOutil, numeroContact, sectionFil);
+      
+              return ResponseEntity.ok()
+                      .contentType(MediaType.TEXT_PLAIN) // Empêche l'encodage HTML
+                      .body(traction);
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                      .contentType(MediaType.TEXT_PLAIN)
+                      .body(e.getMessage());
+          }
+      }
+      
+      @GetMapping("/dernier-numero-cycle")
+      public ResponseEntity<?> getLastNumeroCycle(
+              @RequestParam String sectionFilSelectionne,
+              @RequestParam int segment,
+              @RequestParam Plant nomPlant,
+              @RequestParam String projetName) {
+
+          Optional<Integer> dernierNumeroCycle = serviceSertissageNormal.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
+
+          return dernierNumeroCycle
+                  .map(ResponseEntity::ok) // Si le dernier numéro de cycle est présent, renvoyer 200 OK avec la valeur
+                  .orElseGet(() -> ResponseEntity.noContent().build()); // Sinon, renvoyer 204 No Content
       }
 
-      // Rechercher l'élément demandé et extraire uniquement la valeur après ": "
-      Optional<String> result = Stream.of(values)
-              .filter(val -> val.startsWith(element + ":"))
-              .map(val -> val.split(": ")[1]) // Extraction de la valeur
-              .findFirst();
-
-      return result.orElse("Élément non trouvé");
   }
 
-
-
-
-
-/*
-
-     @GetMapping("/pdekExiste")
-    public PdekDTO recupererNumCycleSiPDEKExist(
-    		  @RequestParam String sectionFil,
-              @RequestParam int  segment,
-              @RequestParam Plant nomPlant,
-              @RequestParam String nomProjet) {
-    	return  servicePDEK.recupererPdekDTO(sectionFil, segment , nomPlant , nomProjet);     
-    }*/
-}

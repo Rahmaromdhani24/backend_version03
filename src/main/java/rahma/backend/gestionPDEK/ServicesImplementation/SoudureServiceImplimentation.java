@@ -144,24 +144,27 @@ public class SoudureServiceImplimentation implements ServiceSoudure {
 	     }
 	 }
 
-/*	 public Optional<SoudureDTO> recupererSoudureAvecMaxCycle(String sectionFil, int segment ,Plant plant , String nomProjet) {
-		  Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEKByCriteria(sectionFil , segment , plant , nomProjet );
+	 ///////
+	 public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
+	        // 1️⃣ Récupérer le PDEK correspondant
+	        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionne, segment, nomPlant, projetName);
 
-		    if (pdekExiste.isPresent()) {
-		        PDEK pdek = pdekExiste.get();
-		        List<Soudure> soudures = soudureRepository.findByPdek_Id(pdek.getId());
+	        if (pdekOpt.isEmpty()) {
+	            return Optional.empty(); // Aucun PDEK trouvé
+	        }
 
-		        return soudures.stream()
-		                .max((s1, s2) -> Integer.compare(s1.getNumeroCycle(), s2.getNumeroCycle()))
-		                .map(s -> new SoudureDTO(
-		                        s.getId(),
-		                        s.getCode(),
-		                        s.getSectionFil(),
-		                        s.getDate().toString(), // ajuste si nécessaire
-		                        s.getNumeroCycle()));
-		    } else {
-		        return Optional.empty();
-		    }
-		}*/
+	        PDEK pdek = pdekOpt.get();
 
+	        // 2️⃣ Récupérer la dernière page PDEK
+	        Optional<PagePDEK> lastPageOpt = pdekPageRepository.findLastPageByPdek(pdek.getId());
+
+	        if (lastPageOpt.isEmpty()) {
+	            return Optional.empty(); // Aucune page trouvée
+	        }
+
+	        PagePDEK lastPage = lastPageOpt.get();
+
+	        //  Récupérer le dernier numéro de cycle de sertissage normal
+	        return soudureRepository.findLastNumeroCycleByPage(lastPage.getId());
+	    }
 }

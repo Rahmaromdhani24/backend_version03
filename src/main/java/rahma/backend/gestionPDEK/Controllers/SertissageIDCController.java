@@ -90,4 +90,18 @@ public class SertissageIDCController {
         }
     }
 
+    @GetMapping("/dernier-numero-cycle")
+    public ResponseEntity<?> getLastNumeroCycle(
+            @RequestParam String sectionFilSelectionne,
+            @RequestParam int segment,
+            @RequestParam Plant nomPlant,
+            @RequestParam String projetName) {
+
+        Optional<Integer> dernierNumeroCycle = serviceSertissageIDC.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
+
+        return dernierNumeroCycle
+                .map(ResponseEntity::ok) // Si le dernier numéro de cycle est présent, renvoyer 200 OK avec la valeur
+                .orElseGet(() -> ResponseEntity.noContent().build()); // Sinon, renvoyer 204 No Content
+    }
+
 }

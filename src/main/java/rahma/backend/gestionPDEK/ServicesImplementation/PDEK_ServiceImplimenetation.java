@@ -82,7 +82,6 @@ public class PDEK_ServiceImplimenetation implements PDEKService {
 	                        pistolet.getDateCreation(),
 	                        pistolet.getTypePistolet(),
 	                        pistolet.getNumeroPistolet(),
-	                        pistolet.getSpecificationMesure(),
 	                        pistolet.getLimiteInterventionMax(),
 	                        pistolet.getLimiteInterventionMin(),
 	                        pistolet.getPdekPistolet() // Associer le PDEK

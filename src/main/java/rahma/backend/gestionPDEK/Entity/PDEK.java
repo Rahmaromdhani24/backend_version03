@@ -2,7 +2,7 @@ package rahma.backend.gestionPDEK.Entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,10 +55,10 @@ public class PDEK {
     private Plant plant;  
 
     @Column(name = "numero_outils")
-    private long numeroOutils;
+    private String numeroOutils;
     
     @Column(name = "numero_contacts")
-    private long numeroContacts;
+    private String numeroContacts;
    
     private String  LGD;
     
@@ -79,6 +79,9 @@ public class PDEK {
     
     @OneToMany(mappedBy = "pdekSertissageIDC", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
     private List<SertissageIDC> pdekSertissageIDC  = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "pdekSertissageNormal", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
+    private List<SertissageNormal> pdekSertissageNormal  = new ArrayList<>();
     
     @ManyToMany  // association user remplissage de pdek  ==> nommer "creer"
     @JoinTable(
