@@ -13,8 +13,7 @@ public class SertissageNormal_DTO {
     private String numOutil ; 
     private String numContact ; 
     private String date;
-    private Integer numCycle;
-
-
+    private int numCycle;
+    private int userSertissageNormal ; 
 
 }

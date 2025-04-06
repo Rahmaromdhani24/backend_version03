@@ -75,7 +75,7 @@ public class SertissageNormal extends Operation {
     private String produit ; 
 
     @Column(name = "serie_produit")
-    private int serieProduit; 
+    private String serieProduit; 
 
     @Column(name = "quantite_cycle")
     private int quantiteCycle; 

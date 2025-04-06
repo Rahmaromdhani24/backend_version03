@@ -42,33 +42,16 @@ public class SoudureController {
     	return  servicePDEK.recupererPdekSoudureUltrason(sectionFil, segment , nomPlant , nomProjet);     
     }
     
-  @GetMapping("/numCycleMax")
-    public int recupererMaxCycle(@RequestParam String sectionFil,
-    		                     @RequestParam int segment ,
-    		                     @RequestParam Plant nomPlant , 
-    		                     @RequestParam String nomProjet ) {
-        Optional<PDEK> pdekExiste = repositoryPDEK.findUniquePDEK_SoudureUtrason(sectionFil,segment , nomPlant , nomProjet);
-
-        if (pdekExiste.isPresent()) {
-            PDEK pdek = pdekExiste.get();
-            return soudureRepository.findByPdekSoudure_Id(pdek.getId()).stream()
-                    .mapToInt(Soudure::getNumeroCycle )
-                    .max()
-                    .orElse(0); 
-        } else {
-            return 0;
-        }
-    }
-
+ 
     @GetMapping("/soudures-par-pdek")
-    public List<SoudureDTO> getSouduresParPdek(
+    public Map<Integer, List<SoudureDTO>> getSouduresParPdek(
             @RequestParam String sectionFil,
             @RequestParam String nomProjet,
             @RequestParam int segment,
             @RequestParam Plant plant) {
-        return serviceSoudure.recupererSouduresParPDEK(sectionFil,segment , plant ,  nomProjet);
+        return serviceSoudure.recupererSouduresParPDEKGroupéesParPage(sectionFil, segment, plant, nomProjet);
     }
-    
+
     @GetMapping("/pelage/{sectionFil}")// sans mm ( nombre secttion )
     public ResponseEntity<String> getPelageBySectionn(@PathVariable String sectionFil) {
         String formattedSection = sectionFil.replace(",", ".").trim() + " mm²";
@@ -189,12 +172,13 @@ public ResponseEntity<String> getTractionBySections(@PathVariable String section
             @RequestParam int segment,
             @RequestParam Plant nomPlant,
             @RequestParam String projetName) {
-
-        Optional<Integer> dernierNumeroCycle = serviceSoudure.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
-
-        return dernierNumeroCycle
-                .map(ResponseEntity::ok) // Si le dernier numéro de cycle est présent, renvoyer 200 OK avec la valeur
-                .orElseGet(() -> ResponseEntity.noContent().build()); // Sinon, renvoyer 204 No Content
+    
+        int dernierNumeroCycle = serviceSoudure.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
+    
+        //  Le Optional contient toujours une valeur : 0 ou un vrai numéro
+        return ResponseEntity.ok(dernierNumeroCycle);
     }
+    
+
 
 }

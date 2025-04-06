@@ -2,6 +2,7 @@ package rahma.backend.gestionPDEK.ServicesInterfaces;
 
 import rahma.backend.gestionPDEK.DTO.PdekDTO;
 import rahma.backend.gestionPDEK.DTO.PistoletDTO;
+import rahma.backend.gestionPDEK.Entity.CategoriePistolet;
 import rahma.backend.gestionPDEK.Entity.Plant;
 import rahma.backend.gestionPDEK.Entity.TypePistolet;
 import rahma.backend.gestionPDEK.Entity.TypesOperation;
@@ -21,8 +22,8 @@ public interface PDEKService {
 	
 
 	                                	/****** torsadage *****/
-	public boolean verifierExistencePDEK_Pistolet(TypePistolet typePistolet ) ; 
-	public PistoletDTO recupererPdek_Pistolet(TypePistolet typePistolet) ; 
+	public boolean verifierExistencePDEK_Pistolet(TypePistolet typePistolet , CategoriePistolet categoriePistolet , int numeroPistolet ) ; 
+	public PistoletDTO recupererPdek_Pistolet(TypePistolet typePistolet , CategoriePistolet categoriePistolet , int numeroPistolet ) ; 
 	
 
 

@@ -1,12 +1,14 @@
 package rahma.backend.gestionPDEK.Controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rahma.backend.gestionPDEK.DTO.PdekDTO;
+import rahma.backend.gestionPDEK.DTO.SoudureDTO;
 import rahma.backend.gestionPDEK.DTO.TorsadageDTO;
 import rahma.backend.gestionPDEK.Entity.*;
 import rahma.backend.gestionPDEK.Repository.*;
@@ -57,31 +59,14 @@ public class TorsadageController {
     	return  servicePDEK.recupererPdekTorsadag(specificationMesure, segment , nomPlant , nomProjet);     
     }
     
-  @GetMapping("/numCycleMax")
-    public int recupererMaxCycle(@RequestParam String specificationMesure,
-    		                     @RequestParam int segment ,
-    		                     @RequestParam Plant nomPlant , 
-    		                     @RequestParam String nomProjet ) {
-        Optional<PDEK> pdekExiste = repositoryPDEK.findUniquePDEK_Torsadage(specificationMesure,segment , nomPlant , nomProjet);
-
-        if (pdekExiste.isPresent()) {
-            PDEK pdek = pdekExiste.get();
-            return torsadageRepository.findByPdekTorsadage_Id(pdek.getId()).stream()
-                    .mapToInt(Torsadage::getNumeroCycle )
-                    .max()
-                    .orElse(0); 
-        } else {
-            return 0;
-        }
-    }
 
     @GetMapping("/torsadage-par-pdek")
-    public List<TorsadageDTO> getSouduresParPdek(
-            @RequestParam String sectionFil,
+    public Map<Integer, List<TorsadageDTO>>  getTorsadagesParPdek(
+            @RequestParam String specificationMesure,
             @RequestParam String nomProjet,
             @RequestParam int segment,
             @RequestParam Plant plant) {
-        return serviceTorsadage.recupererTorsadagesParPDEK(sectionFil,segment , plant ,  nomProjet);
+        return serviceTorsadage.recupererTorsadagesParPDEKGroupéesParPage(specificationMesure,segment , plant ,  nomProjet);
     }
     
      @PostMapping("/ajouterPDEK")
@@ -98,18 +83,18 @@ public class TorsadageController {
         }
     }
 
+
      @GetMapping("/dernier-numero-cycle")
      public ResponseEntity<?> getLastNumeroCycle(
-             @RequestParam String sectionFilSelectionne,
+             @RequestParam String specificationMesureSelectionner,
              @RequestParam int segment,
              @RequestParam Plant nomPlant,
              @RequestParam String projetName) {
-
-         Optional<Integer> dernierNumeroCycle = serviceTorsadage.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
-
-         return dernierNumeroCycle
-                 .map(ResponseEntity::ok) // Si le dernier numéro de cycle est présent, renvoyer 200 OK avec la valeur
-                 .orElseGet(() -> ResponseEntity.noContent().build()); // Sinon, renvoyer 204 No Content
+     
+         int dernierNumeroCycle = serviceTorsadage.getLastNumeroCycle(specificationMesureSelectionner, segment, nomPlant, projetName);
+     
+         //  Le Optional contient toujours une valeur : 0 ou un vrai numéro
+         return ResponseEntity.ok(dernierNumeroCycle);
      }
-
+     
 }

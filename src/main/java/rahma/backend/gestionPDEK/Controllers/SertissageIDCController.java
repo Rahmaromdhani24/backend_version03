@@ -1,12 +1,16 @@
 package rahma.backend.gestionPDEK.Controllers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import rahma.backend.gestionPDEK.DTO.SertissageIDC_DTO;
+import rahma.backend.gestionPDEK.DTO.SoudureDTO;
 import rahma.backend.gestionPDEK.Entity.*;
 import rahma.backend.gestionPDEK.Repository.*;
 import rahma.backend.gestionPDEK.ServicesImplementation.SertissageIDC_ServiceImplimenetation;
@@ -72,36 +76,27 @@ public class SertissageIDCController {
         }
     }
 
-    @GetMapping("/numCycleMax")
-    public int recupererMaxCycle(@RequestParam String sectionFilSelectionner,
-    		                     @RequestParam int segment ,
-    		                     @RequestParam Plant nomPlant , 
-    		                     @RequestParam String nomProjet ) {
-        Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SertissageIDC(sectionFilSelectionner,segment , nomPlant , nomProjet);
 
-        if (pdekExiste.isPresent()) {
-            PDEK pdek = pdekExiste.get();
-            return sertissageIDCRepository.findByPdekSertissageIDC_Id(pdek.getId()).stream()
-                    .mapToInt(SertissageIDC::getNumCycle )
-                    .max()
-                    .orElse(0); 
-        } else {
-            return 0;
-        }
-    }
 
     @GetMapping("/dernier-numero-cycle")
     public ResponseEntity<?> getLastNumeroCycle(
-            @RequestParam String sectionFilSelectionne,
+            @RequestParam String sectionFil,
             @RequestParam int segment,
             @RequestParam Plant nomPlant,
             @RequestParam String projetName) {
-
-        Optional<Integer> dernierNumeroCycle = serviceSertissageIDC.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
-
-        return dernierNumeroCycle
-                .map(ResponseEntity::ok) // Si le dernier numéro de cycle est présent, renvoyer 200 OK avec la valeur
-                .orElseGet(() -> ResponseEntity.noContent().build()); // Sinon, renvoyer 204 No Content
+    
+        int dernierNumeroCycle = serviceSertissageIDC.getLastNumeroCycle(sectionFil, segment, nomPlant, projetName);
+    
+        //  Le Optional contient toujours une valeur : 0 ou un vrai numéro
+        return ResponseEntity.ok(dernierNumeroCycle);
+    }
+    @GetMapping("/sertissages-par-pdek")
+    public Map<Integer, List<SertissageIDC_DTO>> getSouduresParPdek(
+            @RequestParam String sectionFil,
+            @RequestParam String nomProjet,
+            @RequestParam int segment,
+            @RequestParam Plant plant) {
+        return serviceSertissageIDC.recupererSertissagesParPDEKGroupéesParPage(sectionFil, segment, plant, nomProjet);
     }
 
 }

@@ -1,7 +1,10 @@
 package rahma.backend.gestionPDEK.ServicesImplementation;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rahma.backend.gestionPDEK.DTO.SoudureDTO;
@@ -40,7 +43,7 @@ public class SoudureServiceImplimentation implements ServiceSoudure {
     instance1.setPelageX5(instanceSoudure.getPelageX5());
     instance1.setPliage(instanceSoudure.getPliage());
     instance1.setQuantiteAtteint(instanceSoudure.getQuantiteAtteint());
-    instance1.setTraction(instanceSoudure.getTraction());
+    instance1.setTraction(instanceSoudure.getTraction()+"N");
 
     instance1.setEtendu(instanceSoudure.getEtendu());
     instance1.setMoyenne(instanceSoudure.getMoyenne());
@@ -124,47 +127,74 @@ public class SoudureServiceImplimentation implements ServiceSoudure {
 	 
 
 	 @Override
-	 public List<SoudureDTO> recupererSouduresParPDEK(String sectionFil, int segment ,Plant plant ,   String nomProjet) {
-		  Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SoudureUtrason(sectionFil , segment , plant , nomProjet );
+	 public Map<Integer, List<SoudureDTO>> recupererSouduresParPDEKGroupéesParPage(String sectionFil, int segment, Plant plant, String nomProjet) {
+	     Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SoudureUtrason(sectionFil, segment, plant, nomProjet);
 
 	     if (pdekExiste.isPresent()) {
 	         PDEK pdek = pdekExiste.get();
 	         List<Soudure> soudures = soudureRepository.findByPdekSoudure_Id(pdek.getId());
 
+	         // Grouper les soudures par numéro de page
 	         return soudures.stream()
-	                 .map(s -> new SoudureDTO(
-	                         s.getId(),
-	                         s.getCode(),
-	                         s.getSectionFil(),
-	                         s.getDate().toString(), // adapte si c'est LocalDate
-	                         s.getNumeroCycle()))
-	                 .toList();
+	                 .collect(Collectors.groupingBy(
+	                         s -> s.getPagePDEK().getPageNumber(), // groupement par numéro de page
+	                         Collectors.mapping(
+	                                 s -> new SoudureDTO(
+	                                         s.getId(),
+	                                         s.getCode(),
+	                                         s.getSectionFil(),
+	                                         s.getDate().toString(),
+	                                         s.getNumeroCycle(),
+											 s.getUserSoudure().getMatricule()),
+	                                 Collectors.toList()
+	                         )
+	                 ));
 	     } else {
-	         return List.of();
+	         return Map.of();
 	     }
 	 }
 
+
 	 ///////
-	 public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
-	        // 1️⃣ Récupérer le PDEK correspondant
-	        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionne, segment, nomPlant, projetName);
-
-	        if (pdekOpt.isEmpty()) {
-	            return Optional.empty(); // Aucun PDEK trouvé
-	        }
-
-	        PDEK pdek = pdekOpt.get();
-
-	        // 2️⃣ Récupérer la dernière page PDEK
-	        Optional<PagePDEK> lastPageOpt = pdekPageRepository.findLastPageByPdek(pdek.getId());
-
-	        if (lastPageOpt.isEmpty()) {
-	            return Optional.empty(); // Aucune page trouvée
-	        }
-
-	        PagePDEK lastPage = lastPageOpt.get();
-
-	        //  Récupérer le dernier numéro de cycle de sertissage normal
-	        return soudureRepository.findLastNumeroCycleByPage(lastPage.getId());
-	    }
+	 public int getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
+		 // 1️⃣ Récupérer le PDEK correspondant
+		 Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SoudureUtrason(sectionFilSelectionne, segment, nomPlant, projetName);
+	 
+		 if (pdekOpt.isEmpty()) {
+			 // Aucun PDEK trouvé → retourner 0
+			 return 0;
+		 }
+	 
+		 PDEK pdek = pdekOpt.get();
+	 
+		 // 2️⃣ Récupérer la dernière page associée au PDEK
+		 Optional<PagePDEK> lastPageOpt = pdekPageRepository.findFirstByPdekOrderByPageNumberDesc(pdek);
+	 
+		 if (lastPageOpt.isEmpty()) {
+			 // Le PDEK existe, mais aucune page n'est encore créée → retourner 0
+			 return 0;
+		 }
+	 
+		 PagePDEK lastPage = lastPageOpt.get();
+	 
+		 // 3️⃣ Vérifier s'il existe des soudures dans cette page
+		 long nombreSouduresDansPage = soudureRepository.countByPagePDEK(lastPage);
+	 
+		 if (nombreSouduresDansPage == 0) {
+			 // Si la page est vide, retourner 0
+			 return 0;
+		 }
+	 
+		 // 4️⃣ Récupérer le dernier numéro de cycle
+		 Optional<Soudure> lastSoudureOpt = soudureRepository.findTopByPagePDEK_IdOrderByNumeroCycleDesc(lastPage.getId());
+	 
+		 if (lastSoudureOpt.isPresent()) {
+			 // Si une soudure est présente, retourner son numéro de cycle
+			 return lastSoudureOpt.get().getNumeroCycle();
+		 }
+	 
+		 // Si aucune soudure n'est trouvée malgré les vérifications, retourner 0
+		 return 0;
+	 }
+	 
 }

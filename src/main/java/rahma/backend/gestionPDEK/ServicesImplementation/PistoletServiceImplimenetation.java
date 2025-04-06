@@ -1,9 +1,7 @@
 package rahma.backend.gestionPDEK.ServicesImplementation;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
@@ -27,11 +25,17 @@ public class PistoletServiceImplimenetation {
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
         // 2. Vérifier si un PDEK existe pour le type de pistolet
-        PDEK pdek = pdekRepository.findByTypePistolet(pistolet.getType())
+        PDEK pdek = pdekRepository.findUniquePDEK_MontagePistolet(pistolet.getType() ,user.getSegment() , pistolet.getNumeroPistolet() , pistolet.getCategorie() , user.getPlant() )
                 .orElseGet(() -> {
                     PDEK newPdek = new PDEK();
                     newPdek.setTypePistolet(pistolet.getType());
-                  //  newPdek.setDateCreation(LocalDate.now());
+                    newPdek.setDateCreation(pistolet.getDateCreation());
+                    newPdek.setNombreEchantillons("5 Piéces") ; 
+                    newPdek.setPlant(user.getPlant())  ; 
+                    newPdek.setSegment(user.getSegment())  ; 
+                    newPdek.setTypeOperation(TypesOperation.Montage_Pistolet) ;  
+                    newPdek.setNumeroPistolet(pistolet.getNumeroPistolet()) ; 
+                    newPdek.setCategoriePistolet(pistolet.getCategorie()) ; 
                     newPdek.setTotalPages(1);
                     return pdekRepository.save(newPdek);
                 });
@@ -68,7 +72,7 @@ public class PistoletServiceImplimenetation {
         pistolet.setPagePDEK(pagePDEK);
         pistolet.setNumeroCycle(numeroCycle);
         pistolet.setUserPistolet(user); 
-
+        pistolet.setSegment(user.getSegment()); 
         Pistolet savedPistolet = pistoletRepository.save(pistolet);
 
         // 6. Associer l'utilisateur au PDEK pour le remplissage (ManyToMany)
@@ -85,9 +89,9 @@ public class PistoletServiceImplimenetation {
     }
     
 	 ///////
-	 public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
+	 /*public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant) {
 	        // 1️⃣ Récupérer le PDEK correspondant
-	        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionne, segment, nomPlant, projetName);
+	        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_MontagePistolet(sectionFilSelectionne, segment, nomPlant);
 
 	        if (pdekOpt.isEmpty()) {
 	            return Optional.empty(); // Aucun PDEK trouvé
@@ -106,5 +110,5 @@ public class PistoletServiceImplimenetation {
 
 	        //  Récupérer le dernier numéro de cycle de sertissage normal
 	        return pistoletRepository.findLastNumCycleByPage(lastPage.getId());
-	    }
+	    }*/
 }

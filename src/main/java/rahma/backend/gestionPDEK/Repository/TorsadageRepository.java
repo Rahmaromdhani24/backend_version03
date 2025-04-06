@@ -2,7 +2,6 @@ package rahma.backend.gestionPDEK.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,6 +23,9 @@ public interface TorsadageRepository extends JpaRepository<Torsadage, Long> {
 	 
 	 @Query("SELECT s.numeroCycle FROM Torsadage s WHERE s.pagePDEK.id = :pageId ORDER BY s.numeroCycle DESC LIMIT 1")
      Optional<Integer> findLastNumeroCycleByPage(@Param("pageId") Long pageId);
+
+	 
+	 Optional<Torsadage> findTopByPagePDEK_IdOrderByNumeroCycleDesc(Long pageId);
 
 }
 

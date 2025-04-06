@@ -7,11 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import rahma.backend.gestionPDEK.Entity.PagePDEK;
-import rahma.backend.gestionPDEK.Entity.SertissageIDC;
 import rahma.backend.gestionPDEK.Entity.SertissageNormal;
-import rahma.backend.gestionPDEK.Entity.Torsadage;
 
 @Repository
 
@@ -29,6 +26,8 @@ public interface SertissageNormalRepository extends JpaRepository<SertissageNorm
      @Query("SELECT s.numCycle FROM SertissageNormal s WHERE s.pagePDEK.id = :pageId ORDER BY s.numCycle DESC LIMIT 1")
      Optional<Integer> findLastNumCycleByPage(@Param("pageId") Long pageId);
 
+     /*******************************************************************************************/
+    Optional<SertissageNormal> findTopByPagePDEK_IdOrderByNumCycleDesc(Long pageId);
      
 }
 

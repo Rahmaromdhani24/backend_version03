@@ -11,7 +11,8 @@ public class SertissageIDC_DTO {
     private String code;
     private String sectionFil;
     private String date;
-    private Integer numCycle;
+    private int numCycle;
+    private int userSertissageIDC ; 
 
 
 

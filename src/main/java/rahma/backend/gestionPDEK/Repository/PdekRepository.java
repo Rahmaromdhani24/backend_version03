@@ -61,7 +61,26 @@ public interface PdekRepository extends JpaRepository<PDEK , Long> {
 		    @Param("projetName") String projetName
 		);
 
-    Optional<PDEK> findByTypePistolet(TypePistolet typePistolet);
+   // Optional<PDEK> findByTypePistolet(TypePistolet typePistolet);
 
-
+	@Query("SELECT p FROM PDEK p WHERE " +
+		       "p.typeOperation = 'montage_Pistolet' " +
+		       "AND p.typePistolet = :typePistolet " +
+		       "AND p.segment = :segment " +
+		       "AND p.numeroPistolet = :numeroPistolet " +
+		       "AND p.categoriePistolet = :categoriePistolet " +
+		       "AND p.plant = :nomPlant")
+		Optional<PDEK> findUniquePDEK_MontagePistolet(
+		    @Param("typePistolet") TypePistolet typePistolet,
+		    @Param("segment") int segment,
+		    @Param("numeroPistolet") int numeroPistolet,
+		    @Param("categoriePistolet") CategoriePistolet categoriePistolet,
+		    @Param("nomPlant") Plant nomPlant
+		);
+	
+	Optional<PDEK> findByTypePistoletAndCategoriePistoletAndNumeroPistolet(
+		    TypePistolet typePistolet, 
+		    CategoriePistolet categoriePistolet, 
+		    int numeroPistolet
+		);
 }

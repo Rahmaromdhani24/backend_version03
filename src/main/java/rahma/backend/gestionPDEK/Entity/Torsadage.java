@@ -2,10 +2,8 @@ package rahma.backend.gestionPDEK.Entity;
 
 import java.util.List;
 import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -62,7 +60,7 @@ public class Torsadage extends Operation {
     private String numerofil ; 
     
     @Column(name = "longueur_pas_fin_cde")
-    private String longueurPasFinCde ; 
+    private double longueurPasFinCde ; 
     
     @Column(name = "echantillon_1")
     private String ech1 ; 

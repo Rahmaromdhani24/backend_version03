@@ -1,12 +1,8 @@
 package rahma.backend.gestionPDEK.Entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
-import java.util.Optional;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 @Getter
@@ -67,6 +63,12 @@ public class PDEK {
     @Column(name = "pos_gradant")
     private String  posGradant;
     
+    @Column(name = "numero_pistolet")
+    private int  numeroPistolet;
+    
+    @Enumerated(EnumType.STRING)
+    private CategoriePistolet categoriePistolet; 
+    
     @OneToMany(mappedBy = "pdekSoudure", cascade = CascadeType.ALL) // relation "associer"  a operation soudure 
     private List<Soudure> pdekSoudures = new ArrayList<>();
     
@@ -74,13 +76,13 @@ public class PDEK {
     @OneToMany(mappedBy = "pdekTorsadage", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
     private List<Torsadage> pdekTorsadages  = new ArrayList<>();
     
-    @OneToMany(mappedBy = "pdekPistolet", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
+    @OneToMany(mappedBy = "pdekPistolet", cascade = CascadeType.ALL) // relation "associer"  a operation pistolet  
     private List<Pistolet> pdekPistoles  = new ArrayList<>();
     
-    @OneToMany(mappedBy = "pdekSertissageIDC", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
+    @OneToMany(mappedBy = "pdekSertissageIDC", cascade = CascadeType.ALL) // relation "associer"  a operation setissage idc 
     private List<SertissageIDC> pdekSertissageIDC  = new ArrayList<>();
     
-    @OneToMany(mappedBy = "pdekSertissageNormal", cascade = CascadeType.ALL) // relation "associer"  a operation torsadage 
+    @OneToMany(mappedBy = "pdekSertissageNormal", cascade = CascadeType.ALL) // relation "associer"  a operation sertisssage normal  
     private List<SertissageNormal> pdekSertissageNormal  = new ArrayList<>();
     
     @ManyToMany  // association user remplissage de pdek  ==> nommer "creer"

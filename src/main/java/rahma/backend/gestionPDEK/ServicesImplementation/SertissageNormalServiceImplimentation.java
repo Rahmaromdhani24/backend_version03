@@ -2,6 +2,7 @@ package rahma.backend.gestionPDEK.ServicesImplementation;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 1"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getHauteurSertissage();
@@ -73,7 +74,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 2"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getLargeurSertissage();
@@ -84,7 +85,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 3"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getHauteurIsolant();
@@ -95,7 +96,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 4"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getLargeurIsolant();
@@ -106,7 +107,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 5"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getTraction();
@@ -116,7 +117,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 6"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getTolerenceLargeurSertissage();
@@ -125,7 +126,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 7"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getTolerenceHauteurIsolant();
@@ -134,7 +135,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 8"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getTolerenceLargeurIsolant();
@@ -144,7 +145,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 9"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getTolerance();
@@ -154,7 +155,7 @@ public class SertissageNormalServiceImplimentation {
 	        // Récupère un OutilContact en fonction des trois critères
 	        OutilContact outilContact = outilContactRepository
 	                .findByNumeroOutilAndNumeroContactAndSectionFil(numeroOutil, numeroContact, sectionFil)
-	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé"));
+	                .orElseThrow(() -> new RuntimeException("OutilContact non trouvé 10"));
 
 	        // Retourne la hauteur de sertissage associée
 	        return outilContact.getLgd();
@@ -193,7 +194,7 @@ public class SertissageNormalServiceImplimentation {
 
 			instance1.setUserSertissageNormal(user);
 		 /************************** Recuperation PDEK ID s'il exise ****************/
-		  Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionner , user.getSegment() , user.getPlant() , projet );
+		  Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionner  , user.getSegment() , user.getPlant() , projet );
 
 		    if (pdekExiste.isPresent()) {
 		        // Si le Pdek existe, tu peux le récupérer et effectuer tes opérations
@@ -254,7 +255,7 @@ public class SertissageNormalServiceImplimentation {
 		    	newPDEK.setNumeroOutils(instance1.getNumeroOutils());
 		    	newPDEK.setNumeroContacts(instance1.getNumeroContacts());
 		    	newPDEK.setTolerance(instance1.getTolerance());
-		    	newPDEK.setLGD(getLGDeValue(instance1.getNumeroOutils() ,instance1.getNumeroContacts() , instance1.getSectionFil() ));
+		    	newPDEK.setLGD(getLGDeValue(instance1.getNumeroOutils() ,instance1.getNumeroContacts() , sectionFilSelectionner));
 		    	instance1.setNumCycle(1);
 		    	pdekRepository.save(newPDEK)  ;
 		    	PagePDEK newPage = new PagePDEK(1, false, newPDEK);
@@ -271,49 +272,75 @@ public class SertissageNormalServiceImplimentation {
 		    }
 			 }
 
-			 public List<SertissageNormal_DTO> recupererSertissageNormalParPDEK(String sectionFilSelectionner, int segment ,Plant plant ,   String nomProjet) {
-				  Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionner , segment , plant , nomProjet );
+		 public Map<Integer, List<SertissageNormal_DTO>> recupererSertissagesNormalesParPDEKGroupéesParPage(String sectionFil  , int segment, Plant plant, String nomProjet) {
+	     Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SertissageNormal(sectionFil ,  segment, plant, nomProjet);
 
-			     if (pdekExiste.isPresent()) {
-			         PDEK pdek = pdekExiste.get();
-			         List<SertissageNormal> sertissageNormales = sertissageNormalRepository.findByPdekSertissageNormal_Id(pdek.getId());
+	     if (pdekExiste.isPresent()) {
+	         PDEK pdek = pdekExiste.get();
+	         List<SertissageNormal> sertissageNormals = sertissageNormalRepository.findByPdekSertissageNormal_Id(pdek.getId());
 
-			         return sertissageNormales.stream()
-			                 .map(s -> new SertissageNormal_DTO(
-			                         s.getId(),
-			                         s.getCodeControle(),
-			                         s.getSectionFil(),
-			                         s.getNumeroOutils() ,
-			                         s.getNumeroContacts() ,  
-			                         s.getDate(), 
-			                         s.getNumCycle()))
-			                 .toList();
-			     } else {
-			         return List.of();
-			     }
-			 }
+	         // Grouper les soudures par numéro de page
+	         return sertissageNormals.stream()
+	                 .collect(Collectors.groupingBy(
+	                         s -> s.getPagePDEK().getPageNumber(), // groupement par numéro de page
+	                         Collectors.mapping(
+	                                 s -> new SertissageNormal_DTO(
+	                                         s.getId(),
+	                                         s.getCodeControle(),
+	                                         s.getSectionFil(),
+											 s.getNumeroOutils() , 
+											 s.getNumeroContacts() , 
+	                                         s.getDate().toString(),
+	                                         s.getNumCycle() ,
+											 s.getUserSertissageNormal().getMatricule()),
+	                                 Collectors.toList()
+	                         )
+	                 ));
+	     } else {
+	         return Map.of();
+	     }
+	 }
 
-			 ///////
-			 public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
-			        // 1️⃣ Récupérer le PDEK correspondant
-			        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionne, segment, nomPlant, projetName);
-
-			        if (pdekOpt.isEmpty()) {
-			            return Optional.empty(); // Aucun PDEK trouvé
-			        }
-
-			        PDEK pdek = pdekOpt.get();
-
-			        // 2️⃣ Récupérer la dernière page PDEK
-			        Optional<PagePDEK> lastPageOpt = pdekPageRepository.findLastPageByPdek(pdek.getId());
-
-			        if (lastPageOpt.isEmpty()) {
-			            return Optional.empty(); // Aucune page trouvée
-			        }
-
-			        PagePDEK lastPage = lastPageOpt.get();
-
-			        //  Récupérer le dernier numéro de cycle de sertissage normal
-			        return sertissageNormalRepository.findLastNumCycleByPage(lastPage.getId());
-			    }
+	 ///////
+	 public int getLastNumeroCycle(String sectionFil ,  int segment, Plant nomPlant, String projetName) {
+		 // 1️⃣ Récupérer le PDEK correspondant
+		 Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFil , segment, nomPlant, projetName);
+	 
+		 if (pdekOpt.isEmpty()) {
+			 // Aucun PDEK trouvé → retourner 0
+			 return 0;
+		 }
+	 
+		 PDEK pdek = pdekOpt.get();
+	 
+		 // 2️⃣ Récupérer la dernière page associée au PDEK
+		 Optional<PagePDEK> lastPageOpt = pdekPageRepository.findFirstByPdekOrderByPageNumberDesc(pdek);
+	 
+		 if (lastPageOpt.isEmpty()) {
+			 // Le PDEK existe, mais aucune page n'est encore créée → retourner 0
+			 return 0;
+		 }
+	 
+		 PagePDEK lastPage = lastPageOpt.get();
+	 
+		 // 3️⃣ Vérifier s'il existe des soudures dans cette page
+		 long nombreSertissageDansPage = sertissageNormalRepository.countByPagePDEK(lastPage);
+	 
+		 if (nombreSertissageDansPage == 0) {
+			 // Si la page est vide, retourner 0
+			 return 0;
+		 }
+	 
+		 // 4️⃣ Récupérer le dernier numéro de cycle
+		 Optional<SertissageNormal> lastSertissageOpt = sertissageNormalRepository.findTopByPagePDEK_IdOrderByNumCycleDesc(lastPage.getId());
+	 
+		 if (lastSertissageOpt.isPresent()) {
+			 // Si une soudure est présente, retourner son numéro de cycle
+			 return lastSertissageOpt.get().getNumCycle();
+		 }
+	 
+		 // Si aucune soudure n'est trouvée malgré les vérifications, retourner 0
+		 return 0;
+	 }
+	 
 			}

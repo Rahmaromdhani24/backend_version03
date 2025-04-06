@@ -1,11 +1,15 @@
 package rahma.backend.gestionPDEK.ServicesImplementation;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import rahma.backend.gestionPDEK.DTO.SertissageIDC_DTO;
+import rahma.backend.gestionPDEK.DTO.SoudureDTO;
 import rahma.backend.gestionPDEK.Entity.*;
 import rahma.backend.gestionPDEK.Repository.*;
 
@@ -133,46 +137,73 @@ public class SertissageIDC_ServiceImplimenetation {
     }
 	 }
 
-	 public List<SertissageIDC_DTO> recupererSertissageIDCParPDEK(String sectionFilSelectionner, int segment ,Plant plant ,   String nomProjet) {
-		  Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_Torsadage(sectionFilSelectionner , segment , plant , nomProjet );
+	 public Map<Integer, List<SertissageIDC_DTO>> recupererSertissagesParPDEKGroupéesParPage(String sectionFil, int segment, Plant plant, String nomProjet) {
+	     Optional<PDEK> pdekExiste = pdekRepository.findUniquePDEK_SertissageIDC(sectionFil, segment, plant, nomProjet);
 
 	     if (pdekExiste.isPresent()) {
 	         PDEK pdek = pdekExiste.get();
-	         List<SertissageIDC> sertissageIDCs = sertissageIDCRepository.findByPdekSertissageIDC_Id(pdek.getId());
+	         List<SertissageIDC> sertissages = sertissageIDCRepository.findByPdekSertissageIDC_Id(pdek.getId());
 
-	         return sertissageIDCs.stream()
-	                 .map(s -> new SertissageIDC_DTO(
-	                         s.getId(),
-	                         s.getCodeControle(),
-	                         s.getSectionFil(),
-	                         s.getDate(), 
-	                         s.getNumCycle()))
-	                 .toList();
+	         // Grouper les soudures par numéro de page
+	         return sertissages.stream()
+	                 .collect(Collectors.groupingBy(
+	                         s -> s.getPagePDEK().getPageNumber(), // groupement par numéro de page
+	                         Collectors.mapping(
+	                                 s -> new SertissageIDC_DTO(
+	                                         s.getId(),
+	                                         s.getCodeControle(),
+	                                         s.getSectionFil(),
+	                                         s.getDate().toString(),
+	                                         s.getNumCycle(),
+											 s.getUserSertissageIDC().getMatricule()),
+	                                 Collectors.toList()
+	                         )
+	                 ));
 	     } else {
-	         return List.of();
+	         return Map.of();
 	     }
 	 }
+
 	 ///////
-	 public Optional<Integer> getLastNumeroCycle(String sectionFilSelectionne, int segment, Plant nomPlant, String projetName) {
-	        // 1️⃣ Récupérer le PDEK correspondant
-	        Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageNormal(sectionFilSelectionne, segment, nomPlant, projetName);
-
-	        if (pdekOpt.isEmpty()) {
-	            return Optional.empty(); // Aucun PDEK trouvé
-	        }
-
-	        PDEK pdek = pdekOpt.get();
-
-	        // 2️⃣ Récupérer la dernière page PDEK
-	        Optional<PagePDEK> lastPageOpt = pdekPageRepository.findLastPageByPdek(pdek.getId());
-
-	        if (lastPageOpt.isEmpty()) {
-	            return Optional.empty(); // Aucune page trouvée
-	        }
-
-	        PagePDEK lastPage = lastPageOpt.get();
-
-	        //  Récupérer le dernier numéro de cycle de sertissage normal
-	        return sertissageIDCRepository.findLastNumCycleByPage(lastPage.getId());
-	    }
-}
+	 public int getLastNumeroCycle(String sectionFil ,  int segment, Plant nomPlant, String projetName) {
+		 // 1️⃣ Récupérer le PDEK correspondant
+		 Optional<PDEK> pdekOpt = pdekRepository.findUniquePDEK_SertissageIDC(sectionFil , segment, nomPlant, projetName);
+	 
+		 if (pdekOpt.isEmpty()) {
+			 // Aucun PDEK trouvé → retourner 0
+			 return 0;
+		 }
+	 
+		 PDEK pdek = pdekOpt.get();
+	 
+		 // 2️⃣ Récupérer la dernière page associée au PDEK
+		 Optional<PagePDEK> lastPageOpt = pdekPageRepository.findFirstByPdekOrderByPageNumberDesc(pdek);
+	 
+		 if (lastPageOpt.isEmpty()) {
+			 // Le PDEK existe, mais aucune page n'est encore créée → retourner 0
+			 return 0;
+		 }
+	 
+		 PagePDEK lastPage = lastPageOpt.get();
+	 
+		 // 3️⃣ Vérifier s'il existe des soudures dans cette page
+		 long nombreSertissageDansPage = sertissageIDCRepository.countByPagePDEK(lastPage);
+	 
+		 if (nombreSertissageDansPage == 0) {
+			 // Si la page est vide, retourner 0
+			 return 0;
+		 }
+	 
+		 // 4️⃣ Récupérer le dernier numéro de cycle
+		 Optional<SertissageIDC> lastSertissageOpt = sertissageIDCRepository.findTopByPagePDEK_IdOrderByNumCycleDesc(lastPage.getId());
+	 
+		 if (lastSertissageOpt.isPresent()) {
+			 // Si une soudure est présente, retourner son numéro de cycle
+			 return lastSertissageOpt.get().getNumCycle();
+		 }
+	 
+		 // Si aucune soudure n'est trouvée malgré les vérifications, retourner 0
+		 return 0;
+	 }
+	 
+			}

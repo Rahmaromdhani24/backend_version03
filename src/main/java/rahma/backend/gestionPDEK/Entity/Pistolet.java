@@ -23,7 +23,7 @@ public class Pistolet extends Operation {
     private String limiteInterventionMax;
     private String limiteInterventionMin;
     private String dateCreation ; 
-    
+    private int segment; 
     @Enumerated(EnumType.STRING)
     private TypePistolet type; 
 

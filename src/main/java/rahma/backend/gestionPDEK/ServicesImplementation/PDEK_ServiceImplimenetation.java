@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import rahma.backend.gestionPDEK.DTO.PdekDTO;
 import rahma.backend.gestionPDEK.DTO.PistoletDTO;
+import rahma.backend.gestionPDEK.Entity.CategoriePistolet;
 import rahma.backend.gestionPDEK.Entity.PDEK;
 import rahma.backend.gestionPDEK.Entity.Plant;
 import rahma.backend.gestionPDEK.Entity.TypePistolet;
@@ -59,15 +60,15 @@ public class PDEK_ServiceImplimenetation implements PDEKService {
 	}
 
 	@Override
-	public boolean verifierExistencePDEK_Pistolet(TypePistolet typePistolet) {
-		  Optional<PDEK> pdekExiste = pdekRepository.findByTypePistolet(typePistolet );
+	public boolean verifierExistencePDEK_Pistolet(TypePistolet typePistolet , CategoriePistolet categoriePistolet , int numeroPistolet ) {
+		  Optional<PDEK> pdekExiste = pdekRepository.findByTypePistoletAndCategoriePistoletAndNumeroPistolet(typePistolet   , categoriePistolet ,numeroPistolet );
 		    return pdekExiste.isPresent();
 	}
 	
 	@Override
-	public PistoletDTO recupererPdek_Pistolet(TypePistolet typePistolet) {
+	public PistoletDTO recupererPdek_Pistolet(TypePistolet typePistolet , CategoriePistolet categoriePistolet , int numeroPistolet ) {
 	    // Recherche un PDEK selon le type de pistolet
-	    Optional<PDEK> pdekOpt = pdekRepository.findByTypePistolet(typePistolet);
+	    Optional<PDEK> pdekOpt = pdekRepository.findByTypePistoletAndCategoriePistoletAndNumeroPistolet(typePistolet   , categoriePistolet ,numeroPistolet );
 	    
 	    // Si le PDEK existe, on cherche un Pistolet associé au type de Pistolet
 	    if (pdekOpt.isPresent()) {

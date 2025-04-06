@@ -11,7 +11,8 @@ public class TorsadageDTO {
     private String code;
     private String specificationMesure;
     private String date;
-    private Integer numeroCycle;
+    private int numeroCycle;
+    private int userTorsadage ; 
 
 
 

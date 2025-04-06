@@ -23,8 +23,11 @@ public interface SoudureRepository extends JpaRepository<Soudure, Long> {
 	   // Compter le nombre de SertissageIDC associés à une page donnée
 	    long countByPagePDEK(PagePDEK pagePDEK);
 	    
-	    @Query("SELECT s.numeroCycle FROM Soudure s WHERE s.pagePDEK.id = :pageId ORDER BY s.numeroCycle DESC LIMIT 1")
-	     Optional<Integer> findLastNumeroCycleByPage(@Param("pageId") Long pageId);
+		/*@Query(value = "SELECT s.numero_cycle FROM soudure s WHERE s.pagepdek_id = :pageId ORDER BY s.numero_cycle DESC LIMIT 1", nativeQuery = true)
+		Optional<Integer> findLastNumeroCycleByPage(@Param("pageId") Long pageId);
+		
+*/
+Optional<Soudure> findTopByPagePDEK_IdOrderByNumeroCycleDesc(Long pageId);
 
 }
 

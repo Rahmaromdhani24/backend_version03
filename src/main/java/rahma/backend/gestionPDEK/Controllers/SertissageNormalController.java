@@ -2,14 +2,13 @@ package rahma.backend.gestionPDEK.Controllers;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.Optional;
-import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rahma.backend.gestionPDEK.DTO.SertissageNormal_DTO;
 import rahma.backend.gestionPDEK.Entity.*;
 import rahma.backend.gestionPDEK.Repository.*;
 import rahma.backend.gestionPDEK.ServicesImplementation.PDEK_ServiceImplimenetation;
@@ -115,7 +114,7 @@ public ResponseEntity<String> ajouterSertissageNormal(
               @RequestParam String sectionFil) {
           
           try {
-              // Appel du service pour récupérer la hauteur de sertissage
+              // Appel du service pour récupérer la hauteur isolant
               String hauteurSertissage = serviceSertissageNormal.getHauteurIsolant(numeroOutil, numeroContact, sectionFil);
               return ResponseEntity.ok(hauteurSertissage); // Retourne la hauteur de sertissage
           } catch (Exception e) {
@@ -202,20 +201,39 @@ public ResponseEntity<String> ajouterSertissageNormal(
                       .body(e.getMessage());
           }
       }
-      
-      @GetMapping("/dernier-numero-cycle")
-      public ResponseEntity<?> getLastNumeroCycle(
-              @RequestParam String sectionFilSelectionne,
-              @RequestParam int segment,
-              @RequestParam Plant nomPlant,
-              @RequestParam String projetName) {
-
-          Optional<Integer> dernierNumeroCycle = serviceSertissageNormal.getLastNumeroCycle(sectionFilSelectionne, segment, nomPlant, projetName);
-
-          return dernierNumeroCycle
-                  .map(ResponseEntity::ok) // Si le dernier numéro de cycle est présent, renvoyer 200 OK avec la valeur
-                  .orElseGet(() -> ResponseEntity.noContent().build()); // Sinon, renvoyer 204 No Content
+      @GetMapping("/lgd")
+      public ResponseEntity<String> getLgd(
+              @RequestParam String numeroOutil,
+              @RequestParam String numeroContact,
+              @RequestParam String sectionFil) {
+          
+          try {
+              // Appel du service pour récupérer la hauteur de sertissage
+              String valueLGD = serviceSertissageNormal.getLGDeValue(numeroOutil, numeroContact, sectionFil);
+              return ResponseEntity.ok(valueLGD); // Retourne la hauteur de sertissage
+          } catch (Exception e) {
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Retourne une erreur en cas d'exception
+          }
       }
-
+      @GetMapping("/dernier-numero-cycle")
+    public ResponseEntity<?> getLastNumeroCycle(
+            @RequestParam String sectionFil,
+            @RequestParam int segment,
+            @RequestParam Plant nomPlant,
+            @RequestParam String projetName) {
+    
+        int dernierNumeroCycle = serviceSertissageNormal.getLastNumeroCycle(sectionFil, segment, nomPlant, projetName);
+    
+        //  Le Optional contient toujours une valeur : 0 ou un vrai numéro
+        return ResponseEntity.ok(dernierNumeroCycle);
+    }
+ @GetMapping("/sertissageNormal-par-pdek")
+    public Map<Integer, List<SertissageNormal_DTO>> getSertissagesNormalParPdek(
+            @RequestParam String sectionFil,
+            @RequestParam String nomProjet,
+            @RequestParam int segment,
+            @RequestParam Plant plant) {
+        return serviceSertissageNormal.recupererSertissagesNormalesParPDEKGroupéesParPage(sectionFil ,segment, plant, nomProjet);
+    }
   }
 

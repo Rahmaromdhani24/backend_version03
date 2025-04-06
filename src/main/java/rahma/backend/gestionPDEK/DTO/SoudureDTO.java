@@ -11,8 +11,7 @@ public class SoudureDTO {
     private String code;
     private String sectionFil;
     private String date;
-    private Integer numeroCycle;
-
-
+    private int numeroCycle;
+    private int userSoudure ; 
 
 }
